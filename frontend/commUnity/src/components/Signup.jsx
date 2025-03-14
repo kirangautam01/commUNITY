@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function SignupForm() {
   const [username, setUsername] = useState("");
@@ -10,6 +11,7 @@ function SignupForm() {
   const [passwordStrength, setPasswordStrength] = useState("");
   const [emailError, setEmailError] = useState("");
 
+  //****************************************************************************  //check email exists
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -39,25 +41,26 @@ function SignupForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/users/register", {
-        method: "POST",
-        body: formData, // Send formData instead of JSON
-      });
+      const response = await axios.post(
+        "http://localhost:4000/users/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
+        }
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess("Account created successfully! Please log in.");
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        fileInput.value = ""; // Clear file input
-      } else {
-        setError(data.message || "Something went wrong.");
-      }
-    } catch (err) {
-      setError(data.error || "Failed to connect to the server.");
+      setSuccess("Account created successfully! Please log in.");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      fileInput.value = ""; // Clear file input
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "Failed to connect to the server."
+      );
     }
   };
 
@@ -84,6 +87,33 @@ function SignupForm() {
         return "text-green-500";
       default:
         return "";
+    }
+  };
+
+  //****************************************************************************  //check email exists
+  const checkEmailExists = async (e) => {
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+    setEmailError(""); // Clear previous errors
+
+    if (!emailValue.includes("@") || !emailValue.includes(".")) {
+      setEmailError("Invalid email format.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/users/email_exist",
+        { email: emailValue }
+      );
+
+      if (response.data.exists) {
+        setEmailError("Email already exists. Please use a different email.");
+      }
+    } catch (error) {
+      setEmailError(
+        error.response?.data?.message || "Failed to check email existence."
+      );
     }
   };
 
@@ -126,7 +156,7 @@ function SignupForm() {
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={checkEmailExists}
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
             placeholder="you@example.com"
           />
@@ -182,7 +212,13 @@ function SignupForm() {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-500"
+          disabled={emailError}
+          className={`w-full py-2 px-4 rounded-md focus:ring-2 focus:ring-blue-500 
+            ${
+              emailError
+                ? "bg-blue-300 text-gray-500 cursor-not-allowed"
+                : "bg-blue-500 text-white hover:bg-blue-600"
+            }`}
         >
           Sign Up
         </button>
