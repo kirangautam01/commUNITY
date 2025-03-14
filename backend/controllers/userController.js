@@ -53,28 +53,24 @@ const checkEmailExists = async (req, res) => {
             // Function to generate a 6-digit OTP
             const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-            // If email does not exist, generate OTP
+            // Generate OTP
             const otp = generateOTP();
 
-            // Store OTP in memory with email as key
+            // Store OTP in memory (temporary storage)
             otpStore[email] = otp;
 
-            // Send OTP via email
+            // Email configuration
             const mailOptions = {
                 from: 'romangautam71399@gmail.com',
                 to: email,
                 subject: "Your OTP for Verification",
                 text: `Your OTP code is ${otp}. It is valid for 5 minutes.`
             };
-            await transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error("Error sending email:", error);
-                    return res.status(500).json({ message: "Error sending email", error });
-                } else {
-                    console.log("Email sent successfully:", info.response);
-                    return res.status(200).json({ exists: false, otpSent: true, message: "OTP sent to email" });
-                }
-            });
+
+            // Send email using await
+            await transporter.sendMail(mailOptions);
+
+            // Send response to frontend
             return res.status(200).json({ exists: false, otpSent: true, message: "OTP sent to email" });
         }
     } catch (error) {
@@ -84,7 +80,7 @@ const checkEmailExists = async (req, res) => {
 };
 
 const otpVerify = async (req, res) => {
-    const { otp } = req.body;
+    const { otp, email } = req.body;
     if (otpStore[email] === otp) {
         // if (testOtp === otp) {
         res.json({ message: 'OTP verified successfully' });

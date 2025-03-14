@@ -10,6 +10,10 @@ function SignupForm() {
   const [success, setSuccess] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [otp, setOTP] = useState("");
+  const [otpMessage, setOtpMessage] = useState("");
+  // const [otpDisabled, setOtpDisabled] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
 
   //****************************************************************************  //check email exists
   const handleSubmit = async (e) => {
@@ -109,10 +113,36 @@ function SignupForm() {
 
       if (response.data.exists) {
         setEmailError("Email already exists. Please use a different email.");
+      } else if (response.data.otpSent) {
+        setOtpMessage("OTP has been sent to your email.");
       }
     } catch (error) {
       setEmailError(
         error.response?.data?.message || "Failed to check email existence."
+      );
+    }
+  };
+
+  //****************************************************************************  //verify otp
+  const verifyOTP = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/users/otp_verify",
+        {
+          email: email,
+          otp: otp, // Use the stored state value
+        }
+      );
+
+      if (response.data.message) {
+        alert("OTP verified successfully!");
+        setOtpVerified(true);
+      } else {
+        alert("OTP verification failed.");
+      }
+    } catch (error) {
+      alert(
+        "Error verifying OTP: " + error.response?.data?.message || error.message
       );
     }
   };
@@ -126,6 +156,7 @@ function SignupForm() {
         <p className="text-red-500 text-center mb-4">{emailError}</p>
       )}
       {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+      {otpMessage && <p className="text-green-500">{otpMessage}</p>}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -160,6 +191,30 @@ function SignupForm() {
             className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
             placeholder="you@example.com"
           />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="OTP"
+            className="block text-sm font-medium text-gray-700"
+          >
+            OTP
+          </label>
+          <input
+            type="text"
+            id="otp"
+            value={otp}
+            onChange={(e) => setOTP(e.target.value)} // Only update state
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your OTP"
+          />
+          <button
+            type="button"
+            onClick={verifyOTP}
+            className="mt-2 px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600"
+          >
+            Verify OTP
+          </button>
         </div>
 
         <div className="mb-4">
@@ -212,10 +267,10 @@ function SignupForm() {
 
         <button
           type="submit"
-          disabled={emailError}
+          disabled={!otpVerified}
           className={`w-full py-2 px-4 rounded-md focus:ring-2 focus:ring-blue-500 
             ${
-              emailError
+              !otpVerified
                 ? "bg-blue-300 text-gray-500 cursor-not-allowed"
                 : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
