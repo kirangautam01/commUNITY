@@ -2,6 +2,8 @@ const transporter = require('../config/emailConfig');
 const otpStore = {}; // Store OTPs temporarily
 const bcrypt = require('bcrypt');
 const User = require("../models/userModel");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const checkEmailExists = async (req, res) => {
     try {
@@ -82,7 +84,14 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        res.status(200).json({ message: "login successful", user });
+        //generate JWT token
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRECT_KEY,
+            { expiresIn: "1h" }
+        );
+
+        res.status(200).json({ message: "login successful", token, user });
     } catch (error) {
         console.error("Login Error:", error); // Debugging
 
