@@ -7,8 +7,6 @@ const transporter = nodemailer.createTransport({
         user: 'romangautam71399@gmail.com',
         pass: 'xpeq dxhj wpkh fzou'
     },
-    debug: true,  // Enable debug mode
-    logger: true  // Log everything
 });
 
 module.exports = transporter;
