@@ -1,14 +1,8 @@
 import React from "react";
-import Home from "./Home";
-import Header from "./Header";
+import Login from "./components/Login";
 
 function App() {
-  return (
-    <>
-      <Header />
-      <Home />
-    </>
-  );
+  return <Login />;
 }
 
 export default App;

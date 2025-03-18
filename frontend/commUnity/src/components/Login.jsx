@@ -1,78 +1,58 @@
-import React, { useState } from "react";
+import React from "react";
 
-function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError("Both fields are required.");
-    } else {
-      setError("");
-      // Perform login logic here (e.g., API call)
-      console.log("Logging in with", { email, password });
-    }
-  };
-
+function Login() {
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-      <h2 className="text-3xl font-semibold text-center mb-6">Login</h2>
+    <div className="flex w-screen h-screen overflow-hidden">
+      <div className="w-1/2 h-full bg-sky-200 hidden md:block">
+        <img
+          src="/images/login_side.png"
+          alt="login_side"
+          className="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "
+        />
+      </div>
 
-      {/* Error Message */}
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit}>
-        {/* Email Field */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="you@example.com"
+      <div className="relative w-full md:w-1/2 h-full bg-primaryRed overflow-hidden">
+        <h1 className="absolute top-2 left-1/2 transform -translate-x-1/2 text-2xl sm:text-4xl md:text-3xl lg:text-4xl text-primaryBlue font-bold leading-none">
+          commUNITY
+          <br />
+          <span className="text-white text-sm sm:text-lg font-normal leading-tight">
+            plan together, execute together
+          </span>
+        </h1>
+        <div className="h-full flex flex-col justify-center items-center">
+          <img
+            src="/images/logo3.png"
+            alt="community_logo"
+            className="mx-auto w-2/8"
           />
+          <form className="grid gap-4 w-full  mx-auto text-white text-base sm:text-xl sm:w-3/4">
+            <label className="text-sky-400">Username</label>
+            <input
+              placeholder="username"
+              className="border border-sky-400 rounded-md p-1 w-full sm:p-2"
+            />
+
+            <label className="text-sky-400">Password</label>
+            <input
+              placeholder="password"
+              type="password"
+              className="border border-sky-400 rounded-md p-1 sm:p-2"
+            />
+
+            <input
+              type="submit"
+              className="text-white bg-sky-400 rounded-md w-fit m-auto p-1 sm:py-2 sm:px-4 cursor-pointer"
+            />
+
+            <div className="flex flex-col md:flex-row justify-between text-sm text-center sm:text-xl mt-4">
+              <p className="cursor-pointer">Forgot Password?</p>
+              <p className="cursor-pointer">Sign Up</p>
+            </div>
+          </form>
         </div>
-
-        {/* Password Field */}
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="••••••••"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Login
-        </button>
-      </form>
-
-      <p className="text-center text-sm mt-4">
-        Don't have an account?{" "}
-        <button className="text-blue-500 hover:underline" onClick={() => setTab("signup")}>
-          Sign up
-        </button>
-      </p>
+      </div>
     </div>
   );
 }
 
-export default LoginForm;
+export default Login;
