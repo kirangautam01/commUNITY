@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const checkEmailExists = async (req, res) => {
+const sentOtp = async (req, res) => {
     try {
         const { email } = req.body;
 
@@ -16,20 +16,8 @@ const checkEmailExists = async (req, res) => {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            return res.status(200).json({ exists: true, message: "Email already exists" });
+            return res.status(400).json({ exists: true, message: "Email already exists" });
         }
-        else if (!existingUser) {
-            return res.status(200).json({ exists: false, message: "email is available" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error" });
-    }
-};
-
-const sentOtp = async (req, res) => {
-    try {
-        const { email } = req.body;
 
         // Function to generate a 6-digit OTP
         const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -54,9 +42,10 @@ const sentOtp = async (req, res) => {
         // Send response to frontend
         return res.status(200).json({ exists: false, otpSent: true, message: "OTP sent to email" });
     } catch (error) {
+        console.error(error); // Log the error to the server console
         res.status(500).json({ message: "Server error" });
     }
-}
+};
 
 const otpVerify = async (req, res) => {
     const { otp, email } = req.body;
@@ -102,4 +91,4 @@ const loginUser = async (req, res) => {
     }
 }
 
-module.exports = { checkEmailExists, sentOtp, otpVerify, loginUser }
+module.exports = { sentOtp, otpVerify, loginUser }
