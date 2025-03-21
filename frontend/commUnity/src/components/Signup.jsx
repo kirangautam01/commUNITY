@@ -6,11 +6,15 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [otpFormVisible, setOtpFormVisible] = useState(false);
   const [otp, setOtp] = useState("");
-  const[mainFormVisible, setMainFormVisible]= useState(false);
+  const [mainFormVisible, setMainFormVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    profilePic: null,
+  });
 
   const handleSubmit1 = async (e) => {
     e.preventDefault();
-    setEmail(email);
 
     try {
       const response = await axios.post(
@@ -55,18 +59,45 @@ function Signup() {
     }
   };
 
-  const handleSubmit3= async(e)=>{
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      profilePic: e.target.files[0],
+    }));
+  };
+
+  const handleSubmit3 = async (e) => {
     e.preventDefault();
-    try{
-      const response = await axios.post("http://localhost:4000/users/register",
-        {username,email,password,profilePic}
+
+    //create a formData object to send file & text data
+    const formDataToSend = new FormData();
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("email", email); //email is already in the state
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("profilePic", formData.profilePic);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/users/register",
+        formDataToSend,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
       toast.success(response.data.message);
-    }catch(error){
+    } catch (error) {
       toast.error("something went wrong. please try again.");
     }
-  }
+  };
 
   return (
     <div className=" flex justify-center items-center flex-col h-screen w-full bg-primaryBlue space-y-4">
@@ -124,23 +155,59 @@ function Signup() {
           )}
         </div>
 
-        <div className={` transition-all delay-700 duration-700 ease-in ${mainFormVisible?"opacity-100 translate-y-0":"opacity-0 -translate-y-20"}`}>
+        {/* _______________ final user registered form _______________ */}
+        <div
+          className={` transition-all delay-700 duration-700 ease-in ${
+            mainFormVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-20"
+          }`}
+        >
           {mainFormVisible && (
             <form className="flex flex-col space-y-2" onSubmit={handleSubmit3}>
               <label>Username: </label>
-              <input placeholder="username" name="username" className="border-2 border-blue-500 rounded-2xl p-2" />
-              
-              <label>Email: </label>
-              <input type="email" value={email} readOnly className="border-2 border-blue-500 rounded-2xl p-2" />
-              
-              <label>Password: </label>
-              <input type="password" name="password" placeholder="● ● ● ● ● ● ● ●" className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm" />
-              
-              <label>Profile Pic: </label>
-              <input type="file" name="profilePic" className="border-2 border-blue-500 rounded-2xl p-2" />
+              <input
+                placeholder="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="border-2 border-blue-500 rounded-2xl p-2"
+                required
+              />
 
-              <input type="submit" className=" bg-primaryBlue border-blue-500 w-2/4 rounded-2xl mx-auto p-2" />
-              
+              <label>Email: </label>
+              <input
+                type="email"
+                value={email}
+                readOnly
+                className="border-2 border-blue-500 rounded-2xl p-2"
+                required
+              />
+
+              <label>Password: </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="● ● ● ● ● ● ● ●"
+                className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm"
+                required
+              />
+
+              <label>Profile Pic: </label>
+              <input
+                type="file"
+                name="profilePic"
+                onChange={handleFileChange}
+                className="border-2 border-blue-500 rounded-2xl p-2"
+                required
+              />
+
+              <input
+                type="submit"
+                className=" bg-primaryBlue border-blue-500 w-2/4 rounded-2xl mx-auto p-2"
+              />
             </form>
           )}
         </div>
