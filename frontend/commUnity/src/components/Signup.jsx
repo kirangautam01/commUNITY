@@ -6,9 +6,11 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [otpFormVisible, setOtpFormVisible] = useState(false);
   const [otp, setOtp] = useState("");
+  const[mainFormVisible, setMainFormVisible]= useState(false);
 
   const handleSubmit1 = async (e) => {
     e.preventDefault();
+    setEmail(email);
 
     try {
       const response = await axios.post(
@@ -43,6 +45,7 @@ function Signup() {
       );
 
       toast.success(response.data.message);
+      setMainFormVisible(true);
     } catch (error) {
       if (error.response && error.response.status == 400) {
         toast.error(error.response.data.error);
@@ -52,11 +55,24 @@ function Signup() {
     }
   };
 
+  const handleSubmit3= async(e)=>{
+    e.preventDefault();
+    try{
+      const response = await axios.post("http://localhost:4000/users/register",
+        {username,email,password,profilePic}
+      );
+
+      toast.success(response.data.message);
+    }catch(error){
+      toast.error("something went wrong. please try again.");
+    }
+  }
+
   return (
     <div className=" flex justify-center items-center flex-col h-screen w-full bg-primaryBlue space-y-4">
       <Toaster /> {/* Toast Notification Container */}
       <h1 className="text-6xl font-bold text-primaryRed">SignUp</h1>
-      <div className="relative flex flex-col w-3/4 md:w-1/2 gap-2 bg-white rounded-2xl h-1/2 p-6">
+      <div className="relative flex flex-col w-3/4 min-h-1/2 md:w-1/2 gap-2 bg-white rounded-2xl p-6">
         {/* _______________ Send OTP Form _______________ */}
         <form
           className={`absolute inset-0 flex flex-col items-center justify-center space-y-5 transition-all duration-700 ease-in-out ${
@@ -83,7 +99,7 @@ function Signup() {
         {/* _______________ OTP Verify Form with Smooth Animation _______________ */}
         <div
           className={`absolute inset-0 flex flex-col items-center justify-center w-full transition-all duration-700 delay-700 ease-in-out ${
-            otpFormVisible
+            otpFormVisible && !mainFormVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-5 pointer-events-none"
           } `}
@@ -104,6 +120,27 @@ function Signup() {
                 value="Verify OTP"
                 className="rounded-2xl p-2 w-1/2 md:w-1/4 md:text-2xl bg-green-700 text-white hover:bg-green-500 cursor-pointer text-ellipsis"
               />
+            </form>
+          )}
+        </div>
+
+        <div className={` transition-all delay-700 duration-700 ease-in ${mainFormVisible?"opacity-100 translate-y-0":"opacity-0 -translate-y-20"}`}>
+          {mainFormVisible && (
+            <form className="flex flex-col space-y-2" onSubmit={handleSubmit3}>
+              <label>Username: </label>
+              <input placeholder="username" name="username" className="border-2 border-blue-500 rounded-2xl p-2" />
+              
+              <label>Email: </label>
+              <input type="email" value={email} readOnly className="border-2 border-blue-500 rounded-2xl p-2" />
+              
+              <label>Password: </label>
+              <input type="password" name="password" placeholder="● ● ● ● ● ● ● ●" className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm" />
+              
+              <label>Profile Pic: </label>
+              <input type="file" name="profilePic" className="border-2 border-blue-500 rounded-2xl p-2" />
+
+              <input type="submit" className=" bg-primaryBlue border-blue-500 w-2/4 rounded-2xl mx-auto p-2" />
+              
             </form>
           )}
         </div>
