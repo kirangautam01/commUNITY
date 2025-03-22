@@ -1,12 +1,9 @@
-import React from 'react';
-import MainLogin from './components/MainLogin';
+import React from 'react'
 
 function Home() {
   return (
-    <div className="flex justify-center items-center h-screen bg-primaryBlue text-sky-500 text-4xl font-bold">
-      <MainLogin/>
-    </div>
-  );
+    <div>Home</div>
+  )
 }
 
-export default Home;
+export default Home

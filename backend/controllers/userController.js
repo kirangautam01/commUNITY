@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 
-
 const createUser = async (req, res) => {
     try {
         const { username, email, password, memberOf } = req.body;
@@ -22,10 +21,10 @@ const createUser = async (req, res) => {
 
         // Upload image to Cloudinary ONLY IF USER IS CREATED
         if (req.file) {
-            console.log("Uploading profile picture...");
+            // console.log("Uploading profile picture...");
             newUser.profilePic = req.file.path; // Multer automatically assigns path
             await newUser.save(); // Save updated user with profilePic URL
-            console.log("Profile picture uploaded successfully");
+            // console.log("Profile picture uploaded successfully");
         }
 
         res.status(201).json({ message: 'User created successfully', user: newUser });

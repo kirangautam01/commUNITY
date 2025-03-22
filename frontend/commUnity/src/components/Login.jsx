@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const Navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:4000/users/login", {
+        email,
+        password,
+      });
+
+      if (response.status == 200) {
+        toast.success(response.data.message);
+        Navigate("/");
+        console.log("login successfull");
+      }
+    } catch (error) {
+      toast.error("login failed please try again");
+      console.log("error: " + error);
+    }
+  };
+
   return (
     <div className="flex w-screen h-screen overflow-hidden">
+      <Toaster /> {/* Toast Notification Container */}
       <div className="w-1/2 h-full bg-sky-200 hidden md:block">
         <img
           src="/images/login_side.png"
@@ -10,7 +37,6 @@ function Login() {
           className="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "
         />
       </div>
-
       <div className="relative w-full md:w-1/2 h-full bg-primaryRed overflow-hidden">
         <h1 className="absolute top-2 left-1/2 transform -translate-x-1/2 text-2xl sm:text-4xl md:text-3xl lg:text-4xl text-primaryBlue font-bold leading-none">
           commUNITY
@@ -25,10 +51,19 @@ function Login() {
             alt="community_logo"
             className="mx-auto w-2/8"
           />
-          <form className="grid gap-4 w-full  mx-auto text-white text-base sm:text-xl sm:w-3/4">
-            <label className="text-sky-400">Username</label>
+          <form
+            onSubmit={handleSubmit}
+            className="grid gap-4 w-full  mx-auto text-white text-base sm:text-xl sm:w-3/4"
+          >
+            <label className="text-sky-400">Email</label>
             <input
-              placeholder="username"
+              placeholder="Email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              required
               className="border border-sky-400 rounded-md p-1 w-full sm:p-2"
             />
 
@@ -36,6 +71,11 @@ function Login() {
             <input
               placeholder="password"
               type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              required
               className="border border-sky-400 rounded-md p-1 sm:p-2"
             />
 
@@ -46,7 +86,9 @@ function Login() {
 
             <div className="flex flex-col md:flex-row justify-between text-sm text-center sm:text-xl mt-4">
               <p className="cursor-pointer">Forgot Password?</p>
-              <p className="cursor-pointer">Sign Up</p>
+              <NavLink to="/signup">
+                <p className="cursor-pointer">Sign Up</p>
+              </NavLink>
             </div>
           </form>
         </div>
