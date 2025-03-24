@@ -5,6 +5,9 @@
   --breakpoint-sm: 360px;
   --breakpoint-md: 700px;
   --breakpoint-lg: 1000px;
+  
   --color-primaryBlue: oklch(0.746 0.16 232.661);
   --color-primaryRed: oklch(0.712 0.194 13.428);
+
+  --font-primary: "Quicksand", sans-serif;
 }

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const Navigate= useNavigate();
   const [email, setEmail] = useState("");
   const [otpFormVisible, setOtpFormVisible] = useState(false);
   const [otp, setOtp] = useState("");
@@ -94,13 +96,14 @@ function Signup() {
       );
 
       toast.success(response.data.message);
+      Navigate('/login');
     } catch (error) {
       toast.error("something went wrong. please try again.");
     }
   };
 
   return (
-    <div className=" flex justify-center items-center flex-col h-screen w-full bg-primaryBlue space-y-4">
+    <div className=" flex justify-center items-center flex-col h-screen w-full bg-primaryBlue space-y-4 font-primary">
       <Toaster /> {/* Toast Notification Container */}
       <h1 className="text-6xl font-bold text-primaryRed">SignUp</h1>
       <div className="relative flex flex-col w-3/4 min-h-1/2 md:w-1/2 gap-2 bg-white rounded-2xl p-6">

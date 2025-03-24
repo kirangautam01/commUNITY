@@ -19,7 +19,7 @@ function Login() {
       if (response.status == 200) {
         toast.success(response.data.message);
         Navigate("/");
-        console.log("login successfull");
+        console.log(response.data);
       }
     } catch (error) {
       toast.error("login failed please try again");
@@ -28,7 +28,7 @@ function Login() {
   };
 
   return (
-    <div className="flex w-screen h-screen overflow-hidden">
+    <div className="flex w-screen h-screen overflow-hidden font-primary">
       <Toaster /> {/* Toast Notification Container */}
       <div className="w-1/2 h-full bg-sky-200 hidden md:block">
         <img
@@ -45,7 +45,7 @@ function Login() {
             plan together, execute together
           </span>
         </h1>
-        <div className="h-full flex flex-col justify-center items-center">
+        <div className="h-full flex flex-col justify-center items-center font-bold">
           <img
             src="/images/logo3.png"
             alt="community_logo"
