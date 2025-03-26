@@ -35,4 +35,21 @@ const createUser = async (req, res) => {
     }
 };
 
-module.exports = { createUser };
+const userInfo = async (req, res) => {
+    try {
+        // Directly access req.user which was set by the authenticateUser middleware
+        const user = req.user;
+
+        // Send the user info in the response
+        res.status(200).json({ user });
+
+        // Optionally log user data for debugging
+        console.log(user);
+    } catch (error) {
+        // Handle errors if needed
+        console.error("Error in userInfo:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+module.exports = { createUser, userInfo };

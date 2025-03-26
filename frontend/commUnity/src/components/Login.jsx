@@ -11,10 +11,16 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/users/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/users/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true, // allow cookie to store
+        }
+      );
 
       if (response.status == 200) {
         toast.success(response.data.message);

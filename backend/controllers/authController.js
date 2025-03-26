@@ -80,7 +80,15 @@ const loginUser = async (req, res) => {
             { expiresIn: "1h" }
         );
 
-        res.status(200).json({ message: "login successful", token, user });
+        // Set token in HTTP-only cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // Use true in production (HTTPS)
+            sameSite: "lax",
+            maxAge: 60 * 60 * 1000, // 1 hour
+            path: "/",
+        });
+        res.json({ message: "Login successful", user: { id: user.id, username: user.username } });
     } catch (error) {
         console.error("Login Error:", error); // Debugging
 

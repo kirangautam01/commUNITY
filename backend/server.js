@@ -5,12 +5,18 @@ const PORT = process.env.PORT;
 const userRoutes = require('./routes/userRoutes');
 const dbConnection = require('./config/dbconfig')
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
 
 //database connection
 dbConnection();
 
+app.use(cookieParser());
+
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",  // ✅ Allow frontend requests
+  credentials: true,  // ✅ Allow cookies
+}));
 
 app.use(express.urlencoded({ extended: true })); // Parse form data
 app.use(express.json()); // Parse JSON requests
