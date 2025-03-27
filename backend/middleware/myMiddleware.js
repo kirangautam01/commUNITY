@@ -7,7 +7,7 @@ const authenticateUser = async (req, res, next) => {
     console.log("all cookies", req.cookies);
 
     if (!token) {
-        return res.status(401).json({ message: "No token provided." });
+        return res.status(401).json({ message: "No token provided.", isAuthenticate: false });
     }
 
     try {
@@ -15,7 +15,7 @@ const authenticateUser = async (req, res, next) => {
         const user = await User.findById(decoded.userId);
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found!' });
+            return res.status(404).json({ message: 'User not found!', isAuthenticate: false });
         }
 
         req.user = user; //attach user info to the request object

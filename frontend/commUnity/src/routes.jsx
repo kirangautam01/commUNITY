@@ -6,8 +6,10 @@ import MyCommunity from "./MyCommunity";
 import Events from "./Events";
 import Notice from "./Notice";
 import Header from "./components/Header";
-import { Outlet } from "react-router-dom"; // Outlet is used to render child components
 import MyAccount from "./MyAccount";
+import ProtectedRoute from "./ProtectedRoute.jsx";
+import { Outlet } from "react-router-dom";
+import { AuthProvider } from "./globalContext/AuthContext.jsx"
 
 const router = createBrowserRouter([
   {
@@ -21,11 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <>
+      <AuthProvider>
         <Header />
-        <Outlet />{" "}
-        {/* This renders child routes like /community, /events, etc. */}
-      </>
+        <Outlet />
+      </AuthProvider>
     ),
     children: [
       {
@@ -33,20 +34,24 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "community", // This matches "/community"
-        element: <MyCommunity />,
+        path: "community",
+        element: <ProtectedRoute />, // Protect this route
+        children: [{ path: "", element: <MyCommunity /> }],
       },
       {
-        path: "events", // This matches "/events"
-        element: <Events />,
+        path: "events",
+        element: <ProtectedRoute />, // Protect this route
+        children: [{ path: "", element: <Events /> }],
       },
       {
-        path: "notice", // This matches "/notice"
-        element: <Notice />,
+        path: "notice",
+        element: <ProtectedRoute />, // Protect this route
+        children: [{ path: "", element: <Notice /> }],
       },
       {
         path: "/account",
-        element: <MyAccount />,
+        element: <ProtectedRoute />, // Protect MyAccount
+        children: [{ path: "", element: <MyAccount /> }],
       },
     ],
   },
