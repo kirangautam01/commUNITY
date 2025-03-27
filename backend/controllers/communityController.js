@@ -2,21 +2,30 @@ const Community = require('../models/communityModel');
 
 const createCommunity = async (req, res) => {
     try {
-        const { name, subtitle, description, privacy, image, creater } = req.body;
+        const { name, subtitle, description, privacy } = req.body;
 
-        // const createrId = req.user._id; //assumed the logged-in user Id is in req.user._id
+        const existingCommunity = await Community.findOne({ name });
+
+        if (existingCommunity) {
+            return res.status(400).json({ message: "community name already exists" });
+        }
 
         const newCommunity = new Community({
             name,
             subtitle,
-            description,
+            description, 
             privacy,
-            image,
-            creater: creater,
-            members: creater
+            creater: req.user._id,
+            members: [req.user._id]
         });
 
         await newCommunity.save();
+
+        if (req.file) {
+            // console.log("Uploading profile picture...");
+            newCommunity.image = req.file.path; // Multer automatically assigns path
+            await newCommunity.save();
+        }
 
         res.status(201).json({
             message: 'Community create successfully',
@@ -52,5 +61,9 @@ const joinCommunity = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+// const myCommunities= async(req,res)=>{
+
+// }
 
 module.exports = { createCommunity, joinCommunity };

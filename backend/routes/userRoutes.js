@@ -15,7 +15,7 @@ router.post('/register', upload.single('profilePic'), createUser); //signup
 router.post('/login', loginUser); //login
 
 //communities
-router.post('/create_community', upload.single('image'), createCommunity); //create community
+router.post('/create_community', upload.single('image'),authenticateUser, createCommunity); //create community
 router.post('/join_community/:communityId', joinCommunity); //join community
 
 //account page routes
