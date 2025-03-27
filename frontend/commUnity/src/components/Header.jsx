@@ -18,7 +18,7 @@ function Header() {
         <nav
           className={`transition-left duration-400 ease-in-out ${
             showMenu ? "left-0" : "-left-full"
-          } md:block absolute md:static bg-sky-400 md:bg-white h-lvh md:h-auto md:w-auto w-screen`}
+          } md:block absolute md:static bg-sky-400 md:bg-white h-lvh md:h-auto md:w-auto w-screen z-50`}
         >
           <ul className="flex flex-col md:flex-row justify-around items-center md:space-x-6 md:space-y-0 space-y-20 md:mt-0 mt-20 md:text-base text-2xl">
             <NavLink to="/events">

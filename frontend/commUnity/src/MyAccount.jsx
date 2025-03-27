@@ -9,7 +9,7 @@ function MyAccount() {
       try {
         const response = await axios.get(
           "http://localhost:4000/users/profile",
-            {withCredentials: true,}
+          { withCredentials: true }
         );
 
         console.log(response.data);
@@ -26,8 +26,30 @@ function MyAccount() {
   }
 
   return (
-    <div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+    <div className="font-primary mt-20 w-3/4 mx-auto">
+      {/* header-section */}
+      <div className="flex flex-col md:flex-row items-center gap-5 bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4">
+        <div className="overflow-hidden rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
+          <img
+            src={data.user.profilePic}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <h1 className="text-2xl md:text-7xl font-extrabold text-white uppercase drop-shadow-xl">
+          <span className="font-normal text-sm lowercase">Profile</span>
+          <br />
+          {data.user.username}
+        </h1>
+      </div>
+
+      {/* description-section */}
+      <div className="">
+        <div className="text-2xl md:text-4xl">
+          <h1>Joined Community</h1>
+          
+        </div>
+        
+      </div>
     </div>
   );
 }
