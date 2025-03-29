@@ -4,6 +4,7 @@ import axios from "axios";
 import { IoClose } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
 import YourCommunity from "./components/YourCommunity";
+import JoinedCommunity from "./components/JoinedCommunity";
 
 function MyCommunity() {
   const [showForm, setShowForm] = useState(false);
@@ -49,7 +50,9 @@ function MyCommunity() {
     <div className="mt-20 font-primary box-border">
       <Toaster />
       <div className="space-y-5">
-        <h1 className="text-2xl ml-0 md:ml-30 text-center md:text-left">Create Community</h1>
+        <h1 className="text-2xl ml-0 md:ml-30 text-center md:text-left">
+          Create Community
+        </h1>
         <div
           onClick={handleClick}
           className="animate-pulse w-3/4 md:w-1/5 h-40 mx-auto md:mx-30 bg-gray-500 grid place-items-center rounded-2xl transition-all duration-200 ease-in-out hover:bg-gray-400 hover:border-3 hover:border-primaryBlue"
@@ -76,12 +79,28 @@ function MyCommunity() {
               <input name="name" />
             </div>
             <div className="grid text-lg md:text-xl">
-              <label>Subtitle</label>
+              <label>Purpose/Subtitle</label>
               <input name="subtitle" />
             </div>
             <div className="grid text-lg md:text-xl">
               <label>Description</label>
               <textarea name="description" />
+            </div>
+            <div className="grid text-lg md:text-xl">
+              <label>Location</label>
+              <input name="location" />
+            </div>
+            <div className="grid text-lg md:text-xl">
+              <label>Genre</label>
+              <select name="genre">
+                <option value="General">General</option>
+                <option value="Business">Business</option>
+                <option value="Education">Education</option>
+                <option value="Technology">Technology</option>
+                <option value="Sports">Sports</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Others">Others</option>
+              </select>
             </div>
             <div className="grid text-lg md:text-xl">
               <label>privacy</label>
@@ -104,9 +123,8 @@ function MyCommunity() {
         </div>
       )}
 
-      <hr class="h-0.5 bg-gray-800 border-none m-30" />
-
       <YourCommunity />
+      <JoinedCommunity />
     </div>
   );
 }

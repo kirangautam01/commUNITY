@@ -12,6 +12,17 @@ const communitySchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    location: {
+        type: String
+    },
+    genre: {
+        type: String,
+        enum: ['General','Entertainment', 'Business', 'Education','Sports', 'Technology', 'Others'],
+        default: 'General'
+    },
+    communityId: {
+        type: String,
+    },
     image: {
         type: String,
         default: 'default_community_img.png'

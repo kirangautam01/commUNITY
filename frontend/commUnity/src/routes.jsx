@@ -9,7 +9,8 @@ import Header from "./components/Header";
 import MyAccount from "./MyAccount";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import { Outlet } from "react-router-dom";
-import { AuthProvider } from "./globalContext/AuthContext.jsx"
+import { AuthProvider } from "./globalContext/AuthContext.jsx";
+import ExploreCommunity from "./components/ExploreCommunity.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,10 @@ const router = createBrowserRouter([
       {
         path: "community",
         element: <ProtectedRoute />, // Protect this route
-        children: [{ path: "", element: <MyCommunity /> }],
+        children: [
+          { path: "", element: <MyCommunity /> },
+          { path: "explore", element: <ExploreCommunity /> }
+        ],
       },
       {
         path: "events",
