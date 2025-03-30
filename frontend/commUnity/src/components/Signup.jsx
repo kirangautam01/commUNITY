@@ -12,6 +12,7 @@ function Signup() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    location: "",
     profilePic: null,
   });
 
@@ -84,6 +85,7 @@ function Signup() {
     formDataToSend.append("username", formData.username);
     formDataToSend.append("email", email); //email is already in the state
     formDataToSend.append("password", formData.password);
+    formDataToSend.append("location",formData.location);
     formDataToSend.append("profilePic", formData.profilePic);
 
     try {
@@ -194,6 +196,17 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="● ● ● ● ● ● ● ●"
+                className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm"
+                required
+              />
+              
+              <label>Location: </label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder="kathmandu, itahari, dharan ..."
                 className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm"
                 required
               />

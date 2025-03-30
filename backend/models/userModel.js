@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    location: {
+        type: String,
+    },
     profilePic: {
         type: String // URL or file path to the profile picture
     },

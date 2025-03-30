@@ -30,53 +30,50 @@ function YourCommunity() {
     fetchCommunity();
   }, []);
 
-  const handleClick = (item) => {
-    navigate("/community/explore", { state: { item } });
+  const handleClick = (communityId) => {
+    navigate("/community/explore", { state: { communityId } });
   };
 
   return (
     <div className="p-5 bg-gray-200 mt-20">
-      <h1 className="text-2xl text-center md:text-left ml-0 md:ml-30">
+      <h1 className="text-2xl font-semibold text-gray-800 text-center md:text-left md:pl-8 mt-20">
         My Communities
       </h1>
-      <hr class="h-0.5 bg-gray-800 border-none w-4/5 mx-auto" />
+      <hr className="h-0.5 bg-gradient-to-r from-blue-500 to-green-500 border-none w-[calc(100%-3rem)] mx-auto" />
 
       {loading ? (
         <p className="text-center text-gray-500">Loading...</p>
       ) : error ? (
         <p className="text-center text-red-500">{error}</p>
       ) : communities.length > 0 ? (
-        <div className="grid md:grid-cols-2 gap-6 md:gap-0 place-items-center mt-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 px-4">
           {communities.map((item) => (
             <div
               key={item._id}
-              className="bg-white shadow-lg rounded-lg overflow-hidden p-4 border border-gray-200 w-3/4"
+              className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border border-gray-200 w-full max-w-sm mx-auto transition-all duration-300 hover:shadow-2xl"
             >
+              {/* Community Image */}
               <img
                 src={item.image}
                 alt="community_profile"
-                className="w-full h-40 object-cover rounded-lg"
+                className="w-full h-44 object-cover rounded-lg"
               />
-              <div className="p-3">
+
+              {/* Community Details */}
+              <div className="mt-4">
                 <h2 className="text-xl font-semibold text-gray-900">
                   {item.name}
                 </h2>
                 <p className="text-gray-600 text-sm">{item.subtitle}</p>
-                <p className="mt-2 text-gray-700">{item.description}</p>
-                <p className="mt-2 text-sm text-gray-500">
-                  <strong>Privacy:</strong> {item.privacy}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Members:</strong> {item.members.length}
-                </p>
-                <p className="text-sm text-gray-500">
-                  <strong>Created:</strong>{" "}
-                  {new Date(item.createdAt).toLocaleDateString()}
+                <p className="mt-2 text-gray-700 line-clamp-3">
+                  {item.description}
                 </p>
               </div>
+
+              {/* Explore Button */}
               <button
                 onClick={() => handleClick(item._id)}
-                className="cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105"
+                className="mt-4 w-full bg-blue-600 text-white font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:scale-105"
               >
                 Explore
               </button>

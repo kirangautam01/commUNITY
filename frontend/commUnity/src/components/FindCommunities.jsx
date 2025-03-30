@@ -1,53 +1,48 @@
 import React, { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function JoinedCommunity() {
-  const [communities, setCommunities] = useState([]);
-  const [error, setError] = useState();
-  const [loading, setLoading] = useState(false);
+function FIndCommunities() {
+  const [top10, setTop10] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCommunity = async () => {
+    const top10Communities = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get(
-          "http://localhost:4000/users/joined_communities",
-          { withCredentials: true }
-        );
+        const response = await axios.get("http://localhost:4000/users/top10", {
+          withCredentials: true,
+        });
 
-        setCommunities(response.data);
+        if (response.status === 200) {
+          setTop10(response.data);
+          // console.log(response.data);
+        }
       } catch (error) {
-        setError(
-          error.response?.data?.message || "failed to fetch communities"
-        );
-      } finally {
-        setLoading(false);
+        const errorMessage =
+          error.response?.data?.message || "community couldn't be fetched";
+        console.log(error);
+        toast.error(errorMessage);
       }
     };
-
-    fetchCommunity();
+    top10Communities();
   }, []);
 
-  const handleClick = (item) => {
-    navigate("/community/explore", { state: { item } });
+  const handleClick = (communityId) => {
+    navigate("/community/explore", { state: { communityId } });
   };
 
   return (
-    <div className="p-5 bg-gray-200 mt-20">
+    <div className="font-primary">
+      <Toaster />
       <h1 className="text-2xl font-semibold text-gray-800 text-center md:text-left md:pl-8 mt-20">
-        Joined Communities
+        Recommended Communities for You
       </h1>
       <hr className="h-0.5 bg-gradient-to-r from-blue-500 to-green-500 border-none w-[calc(100%-3rem)] mx-auto" />
 
-      {loading ? (
-        <p className="text-center text-gray-500">Loading...</p>
-      ) : error ? (
-        <p className="text-center text-red-500">{error}</p>
-      ) : communities.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5 px-4">
-          {communities.map((item) => (
+      {top10 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 mt-5">
+          {top10.map((item) => (
             <div
               key={item._id}
               className="bg-white shadow-lg rounded-lg overflow-hidden p-5 border border-gray-200 w-full max-w-sm mx-auto transition-all duration-300 hover:shadow-2xl"
@@ -64,7 +59,7 @@ function JoinedCommunity() {
                 <h2 className="text-xl font-semibold text-gray-900">
                   {item.name}
                 </h2>
-                <p className="text-gray-600 text-sm">{item.subtitle}</p>
+                <p className="text-gray-600 text-sm">{item.location}</p>
                 <p className="mt-2 text-gray-700 line-clamp-3">
                   {item.description}
                 </p>
@@ -80,11 +75,9 @@ function JoinedCommunity() {
             </div>
           ))}
         </div>
-      ) : (
-        <p className="text-center text-gray-500">No communities found.</p>
       )}
     </div>
   );
 }
 
-export default JoinedCommunity;
+export default FIndCommunities;

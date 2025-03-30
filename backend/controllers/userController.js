@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 
 const createUser = async (req, res) => {
     try {
-        const { username, email, password, memberOf } = req.body;
+        const { username, email, password,location, memberOf } = req.body;
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -13,6 +13,7 @@ const createUser = async (req, res) => {
             username,
             email,
             password: hashedPassword,
+            location,
             memberOf
         });
 
@@ -44,7 +45,7 @@ const userInfo = async (req, res) => {
         res.status(200).json({ user });
 
         // Optionally log user data for debugging
-        console.log(user);
+        // console.log(user);
     } catch (error) {
         // Handle errors if needed
         console.error("Error in userInfo:", error);

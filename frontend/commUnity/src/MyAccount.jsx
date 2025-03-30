@@ -12,7 +12,7 @@ function MyAccount() {
           { withCredentials: true }
         );
 
-        console.log(response.data);
+        // console.log(response.data);
         setData(response.data);
       } catch (error) {
         console.log("error", error);
@@ -45,7 +45,7 @@ function MyAccount() {
       {/* description-section */}
       <div className="">
         <div className="text-2xl md:text-4xl">
-          <h1>Joined Community</h1>
+          <h1>{data.user.location}</h1>
           
         </div>
         

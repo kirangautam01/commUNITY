@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import { Outlet } from "react-router-dom";
 import { AuthProvider } from "./globalContext/AuthContext.jsx";
 import ExploreCommunity from "./components/ExploreCommunity.jsx";
+import FindCommunities from "./components/FindCommunities.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,8 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />, // Protect this route
         children: [
           { path: "", element: <MyCommunity /> },
-          { path: "explore", element: <ExploreCommunity /> }
+          { path: "explore", element: <ExploreCommunity /> },
+          { path: "find", element: <FindCommunities /> },
         ],
       },
       {

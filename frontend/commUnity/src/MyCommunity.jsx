@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa6";
-import axios from "axios";
 import { IoClose } from "react-icons/io5";
+import axios from "axios";
+import { MdAddToPhotos } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
 import YourCommunity from "./components/YourCommunity";
 import JoinedCommunity from "./components/JoinedCommunity";
+import { FaUsersViewfinder } from "react-icons/fa6";
+import { NavLink } from "react-router-dom";
 
 function MyCommunity() {
   const [showForm, setShowForm] = useState(false);
@@ -49,17 +51,28 @@ function MyCommunity() {
   return (
     <div className="mt-20 font-primary box-border">
       <Toaster />
-      <div className="space-y-5">
-        <h1 className="text-2xl ml-0 md:ml-30 text-center md:text-left">
-          Create Community
-        </h1>
-        <div
-          onClick={handleClick}
-          className="animate-pulse w-3/4 md:w-1/5 h-40 mx-auto md:mx-30 bg-gray-500 grid place-items-center rounded-2xl transition-all duration-200 ease-in-out hover:bg-gray-400 hover:border-3 hover:border-primaryBlue"
-        >
-          <FaPlus
-            className={`text-3xl text-white ${spin ? "animate-spin_once" : ""}`}
-          />
+      <div className="flex  mx-10 md:mx-0 flex-col md:flex-row justify-center gap-10 md:gap-20">
+        <div className="space-y-5">
+          <h1 className="text-2xl text-center ">Create Community</h1>
+          <div
+            onClick={handleClick}
+            className="animate-pulse py-15 bg-gray-500 grid place-items-center rounded-2xl transition-all duration-200 ease-in-out hover:bg-gray-400 hover:border-3 hover:border-primaryBlue"
+          >
+            <MdAddToPhotos
+              className={`text-3xl text-white ${
+                spin ? "animate-spin_once" : ""
+              }`}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-5">
+          <h1 className="text-2xl text-center ">Find Some Community</h1>
+          <NavLink to="/community/find">
+            <div className="animate-pulse py-15 bg-gray-500 grid place-items-center rounded-2xl transition-all duration-200 ease-in-out hover:bg-gray-400 hover:border-3 hover:border-primaryBlue">
+              <FaUsersViewfinder className="text-3xl text-white" />
+            </div>
+          </NavLink>
         </div>
       </div>
 
@@ -76,19 +89,19 @@ function MyCommunity() {
           >
             <div className="grid text-lg md:text-xl">
               <label>Enter Commnity Name</label>
-              <input name="name" />
+              <input name="name" required />
             </div>
             <div className="grid text-lg md:text-xl">
               <label>Purpose/Subtitle</label>
-              <input name="subtitle" />
+              <input name="subtitle" required/>
             </div>
             <div className="grid text-lg md:text-xl">
               <label>Description</label>
-              <textarea name="description" />
+              <textarea name="description" required/>
             </div>
             <div className="grid text-lg md:text-xl">
               <label>Location</label>
-              <input name="location" />
+              <input name="location" required/>
             </div>
             <div className="grid text-lg md:text-xl">
               <label>Genre</label>
@@ -111,7 +124,7 @@ function MyCommunity() {
             </div>
             <div className="grid text-lg md:text-xl">
               <label>Community profile</label>
-              <input type="file" name="image" />
+              <input type="file" name="image" required/>
             </div>
             <button
               type="submit"
