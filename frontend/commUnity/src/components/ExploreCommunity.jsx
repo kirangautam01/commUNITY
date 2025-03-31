@@ -2,28 +2,29 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { MdCheck } from "react-icons/md";
+import { TbLogout } from "react-icons/tb";
 
 function ExploreCommunity() {
   const location = useLocation();
-  const item = location.state?.communityId; // This expects 'item' to be passed through navigation state
-  const [community, setCommunity] = useState(null); // Initialize with null
-  const [message, setMessage] = useState(""); // Correct use of useState
+  const item = location.state?.communityId;
+  const [community, setCommunity] = useState(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchCommunity = async () => {
       try {
-        // Use backticks for template literals
         const response = await axios.get(
           `http://localhost:4000/users/explore/${item}`
         );
 
         if (response.data) {
-          setCommunity(response.data); // Set community data from the response
+          setCommunity(response.data);
         }
       } catch (error) {
         setMessage("Error fetching community details");
         console.log("error fetching community", error);
-        toast.error(message); // Show an error toast with the message
+        toast.error(message);
       }
     };
 
@@ -58,13 +59,33 @@ function ExploreCommunity() {
     }
   };
 
+  const handleCommunityLeave = async () => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:4000/users/leave_community",
+        {
+          data: { communityId: item },
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.message) {
+        const message= response.data.message;
+        toast.success(message);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Leaving community failed";
+      toast.error(errorMessage);
+    }
+  };
+
   return (
     <div>
       <Toaster />
       {community ? (
         <div className="font-primary">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-white p-6 shadow-lg rounded-lg">
-            {/* Community Image */}
             <img
               src={community.image}
               alt="community_profile"
@@ -72,10 +93,18 @@ function ExploreCommunity() {
             />
 
             {/* Community Details */}
-            <div className="flex flex-col gap-4 md:ml-6">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {community.name}
-              </h1>
+            <div className="flex w-full flex-col gap-4 md:ml-6 text-center md:text-left">
+              <div className="flex justify-between">
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {community.name}
+                </h1>
+
+                {/* leave community */}
+                <TbLogout
+                  onClick={handleCommunityLeave}
+                  className="text-3xl cursor-pointer transiction-scale duration-400 ease hover:scale-110"
+                />
+              </div>
               <p className="text-gray-600">
                 ID:{" "}
                 <span className="font-semibold">#{community.communityId}</span>
@@ -93,12 +122,15 @@ function ExploreCommunity() {
               </p>
 
               {/* Join Button */}
-              <button
-                onClick={joinCommunity}
-                className="mt-4 w-full md:w-auto bg-primaryBlue rounded-2xl p-1 hover:cursor-pointer hover:bg-sky-300"
-              >
-                Join
-              </button>
+              <div className="flex flex-wrap w-full">
+                <button
+                  onClick={joinCommunity}
+                  className="flex-grow mt-4 w-full md:w-auto p-2 bg-primaryBlue rounded-2xl hover:cursor-pointer hover:bg-sky-300 text-center flex items-center justify-center space-x-2"
+                >
+                  <MdCheck className="font-bold text-2xl" />
+                  <span>Join</span>
+                </button>
+              </div>
             </div>
           </div>
 

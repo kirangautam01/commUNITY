@@ -22,10 +22,12 @@ function Login() {
         }
       );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         toast.success(response.data.message);
+        localStorage.setItem("userName", response.data.user.username);
+        localStorage.setItem("profile", response.data.user.profile);
+        // console.log(response.data.user.username,response.data.user.profile);
         Navigate("/");
-        console.log(response.data);
       }
     } catch (error) {
       toast.error("login failed please try again");

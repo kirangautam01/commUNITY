@@ -5,6 +5,7 @@ import { IoIosArrowBack } from "react-icons/io";
 
 function Header() {
   const [showMenu, setShowMenu] = useState(false);
+  const username = localStorage.getItem("userName");
   return (
     <>
       <div className="md:px-4 overflow-hidden flex justify-between md:mt-4 font-primary font-bold">
@@ -24,8 +25,13 @@ function Header() {
             <NavLink to="/events">
               <li
                 onClick={() => setShowMenu(false)}
-                className={`w-full cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 hover:bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105`}
+                className="flex gap-2 md:block w-full cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 hover:bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105"
               >
+                <img
+                  src="/images/event.png"
+                  alt="event"
+                  className="size-10 mx-auto"
+                />
                 Events
               </li>
             </NavLink>
@@ -33,25 +39,36 @@ function Header() {
             <NavLink to="notice">
               <li
                 onClick={() => setShowMenu(false)}
-                className="w-full cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 hover:bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105 "
+                className="flex gap-2 md:block w-full cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 hover:bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105 "
               >
+                <img
+                  src="/images/notice.png"
+                  alt="notice"
+                  className="size-10 mx-auto "
+                />
                 Notice Board
               </li>
             </NavLink>
             <NavLink to="community">
               <li
                 onClick={() => setShowMenu(false)}
-                className="w-full cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 hover:bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105 "
+                className="flex gap-2 md:block w-full cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 hover:bg-primaryBlue hover:text-white hover:shadow-lg hover:scale-105 "
               >
+                <img
+                  src="/images/union.png"
+                  alt="event"
+                  className="size-10 mx-auto"
+                />
                 My Community
               </li>
             </NavLink>
             <NavLink to="/account">
               <li
                 onClick={() => setShowMenu(false)}
-                className="cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 bg-primaryRed hover:text-white hover:shadow-lg hover:scale-105"
+                className="flex gap-2 md:block cursor-pointer px-4 py-1 rounded-2xl transition-all duration-300 bg-primaryRed hover:text-white hover:shadow-lg hover:scale-105"
               >
-                My Account
+                <img src="/images/user.png" alt="user_profile" className="size-10 rounded-full object-cover mx-auto"/>
+                {username}
               </li>
             </NavLink>
           </ul>
@@ -59,6 +76,9 @@ function Header() {
             onClick={() => setShowMenu(false)}
             className="md:hidden absolute top-0 right-0 text-4xl m-7 cursor-pointer"
           />
+          <p className="absolute bottom-3 font-medium text-center text-sm px-10 block md:hidden">
+            All rights reserved | @copyright 2025 | commUNITY-Roman Gautam
+          </p>
         </nav>
         <RiMenuFold4Line
           onClick={() => setShowMenu(true)} //menu

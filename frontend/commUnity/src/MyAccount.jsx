@@ -44,9 +44,9 @@ function MyAccount() {
 
       {/* description-section */}
       <div className="">
-        <div className="text-2xl md:text-4xl">
-          <h1>{data.user.location}</h1>
-          
+        <div className="block md:flex justify-between">
+          <h1 className="text-2xl md:text-4xl">{data.user.location}</h1>
+          <p>Community joined: {data.user.memberOf.length}</p>
         </div>
         
       </div>

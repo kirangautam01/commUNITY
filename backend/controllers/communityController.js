@@ -165,13 +165,14 @@ const top10Communities = async (req, res) => {
         const location = req.user.location;
         const userId = req.user?._id;
 
-        const communities = await Community.find({ location: { $regex: location, $options: 'i' }, creater: { $ne: userId } });
+        const communities = await Community.find({ location: { $regex: location, $options: 'i' }, creater: { $ne: userId }, members: { $ne: userId } }).exec();
 
         let additionalCommunities = [];
 
         if (communities.length < 10) {
             const remaining = 10 - communities.length;
-            additionalCommunities = await Community.find({ creater: { $ne: userId } }).limit(remaining).exec();
+            const excludedCommunityIds = communities.map(comm => comm._id);  //collect id of collected communities
+            additionalCommunities = await Community.find({ _id: { $nin: excludedCommunityIds }, creater: { $ne: userId }, members: { $ne: userId } }).limit(remaining).exec();
         }
 
         const data = [...communities, ...additionalCommunities].slice(0, 30);
@@ -179,6 +180,38 @@ const top10Communities = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
         console.log(error)
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------- LEAVE COMMUNITY
+const leaveCommunity = async (req, res) => {
+    try {
+        const { communityId } = req.body;
+        const userId = req.user?._id;
+
+        if (!communityId) {
+            return res.status(404).json({ message: "community id is required!" });
+        }
+
+        const updatedCommunity = await Community.findByIdAndUpdate(
+            communityId,
+            { $pull: { members: userId } },//remove userId from members array
+            { new: true } //returns the updated document
+        );
+        if (!updatedCommunity) {
+            return res.status(404).json({ message: "community not found" });
+        }
+        const updatedUser = await User.findByIdAndUpdate(userId,
+            { $pull: { memberOf: communityId } },
+            { new: true }
+        );
+        if (!updatedUser) {
+            return res.status(404).json({ message: "community Id removing failed in membersOf array." });
+        }
+        res.status(200).json({ message: "You have left the community" })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Community leave failed!" });
     }
 }
 
@@ -209,4 +242,4 @@ const findCommunity = async (req, res) => {
     }
 };
 
-module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities };
+module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity };

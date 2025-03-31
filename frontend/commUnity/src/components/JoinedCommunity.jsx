@@ -30,8 +30,8 @@ function JoinedCommunity() {
     fetchCommunity();
   }, []);
 
-  const handleClick = (item) => {
-    navigate("/community/explore", { state: { item } });
+  const handleClick = (communityId) => {
+    navigate("/community/explore", { state: { communityId } });
   };
 
   return (
