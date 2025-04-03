@@ -2,14 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { MdCheck } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
+import { IoMdChatboxes } from "react-icons/io";
+import { MdBookmarkAdd } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { AiFillEdit } from "react-icons/ai";
 
 function ExploreCommunity() {
   const location = useLocation();
   const item = location.state?.communityId;
   const [community, setCommunity] = useState(null);
   const [message, setMessage] = useState("");
+  const [admin, setAdmin] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const userid = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -20,6 +26,7 @@ function ExploreCommunity() {
 
         if (response.data) {
           setCommunity(response.data);
+          setAdmin(response.data.creater._id);
         }
       } catch (error) {
         setMessage("Error fetching community details");
@@ -59,6 +66,7 @@ function ExploreCommunity() {
     }
   };
 
+  // --------------------------------------------------------------------------------------------------- LEAVE COMMUNITY
   const handleCommunityLeave = async () => {
     try {
       const response = await axios.delete(
@@ -80,6 +88,15 @@ function ExploreCommunity() {
     }
   };
 
+  // ------------------------------------------------------------------------------------------------------- CHECK ADMIN
+  useEffect(() => {
+    // console.log("admin: ", admin);
+    // console.log("userId: ", userid);
+    if (admin === userid) {
+      setIsAdmin(true);
+    }
+  }, [community, userid]);
+
   return (
     <div>
       <Toaster />
@@ -93,7 +110,7 @@ function ExploreCommunity() {
             />
 
             {/* Community Details */}
-            <div className="flex w-full flex-col gap-4 md:ml-6 text-center md:text-left">
+            <div className="flex w-full flex-col gap-4 md:ml-6">
               <div className="flex justify-between">
                 <h1 className="text-3xl font-bold text-gray-900">
                   {community.name}
@@ -102,12 +119,12 @@ function ExploreCommunity() {
                 {/* leave community */}
                 <TbLogout
                   onClick={handleCommunityLeave}
-                  className="text-3xl cursor-pointer transiction-scale duration-400 ease hover:scale-110"
+                  className="text-3xl cursor-pointer transition-scale duration-400 ease hover:scale-110"
                 />
               </div>
 
               <p className="text-gray-600">
-                ID:
+                ID:&nbsp;&nbsp;
                 <span className="font-semibold">{community.communityId}</span>
               </p>
               <p className="text-gray-700">
@@ -122,15 +139,49 @@ function ExploreCommunity() {
                 {community.createdAt.split("T")[0]}
               </p>
 
-              {/* Join Button */}
-              <div className="flex flex-wrap w-full">
-                <button
-                  onClick={joinCommunity}
-                  className="flex-grow mt-4 w-full md:w-auto p-2 bg-primaryBlue rounded-2xl hover:cursor-pointer hover:bg-sky-300 text-center flex items-center justify-center space-x-2"
+              {/* ------------------------------------------------------------------------------------  icons: edit,delete,join, chat */}
+              <div className="w-full flex gap-7 p-5">
+                <div className={`relative group`}>
+                  <IoMdChatboxes className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200" />
+                  <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Chat
+                  </span>
+                </div>
+                <div className={`relative group`}>
+                  <MdBookmarkAdd
+                    onClick={joinCommunity}
+                    className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200"
+                  />
+                  <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Join
+                  </span>
+                </div>
+                <div
+                  className={`relative group ${
+                    !isAdmin && "pointer-events-none opacity-50"
+                  }`}
                 >
-                  <MdCheck className="font-bold text-2xl" />
-                  <span>Join</span>
-                </button>
+                  <AiFillEdit
+                    onClick={() => alert("edit is clicked")}
+                    className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200"
+                  />
+                  <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Edit
+                  </span>
+                </div>
+                <div
+                  className={`relative group ${
+                    !isAdmin && "pointer-events-none opacity-50"
+                  }`}
+                >
+                  <MdDelete
+                    onClick={() => alert("delete is clicked")}
+                    className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200 text-red-500 hover:text-red-700"
+                  />
+                  <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Delete
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -162,7 +213,7 @@ function ExploreCommunity() {
 
               <div className="overflow-x-auto">
                 <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
-                  <thead className="bg-blue-600 text-white">
+                  <thead className="bg-primaryGreen text-white">
                     <tr>
                       <th className="py-3 px-5 text-left">S.N</th>
                       <th className="py-3 px-5 text-left">Profile</th>

@@ -24,9 +24,10 @@ function Login() {
 
       if (response.status === 200) {
         toast.success(response.data.message);
+        localStorage.setItem("userId",response.data.user._id);
         localStorage.setItem("userName", response.data.user.username);
         localStorage.setItem("profile", response.data.user.profile);
-        // console.log(response.data.user.username,response.data.user.profile);
+        // console.log(response.data.user._id);
         Navigate("/");
       }
     } catch (error) {

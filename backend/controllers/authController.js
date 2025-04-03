@@ -88,7 +88,7 @@ const loginUser = async (req, res) => {
             maxAge: 60 * 60 * 1000, // 1 hour
             path: "/",
         });
-        res.json({ message: "Login successful", user: { id: user.id, username: user.username, profile: user.profilePic } });
+        res.json({ message: "Login successful", user});
     } catch (error) {
         console.error("Login Error:", error); // Debugging
 

@@ -6,6 +6,7 @@ import { IoIosArrowBack } from "react-icons/io";
 function Header() {
   const [showMenu, setShowMenu] = useState(false);
   const username = localStorage.getItem("userName");
+  
   return (
     <>
       <div className="md:px-4 overflow-hidden flex justify-between md:mt-4 font-primary font-bold">
