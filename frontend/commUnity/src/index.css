@@ -2,17 +2,17 @@
 
 @theme {
   --breakpoint-*: initial;
-  --breakpoint-sm: 360px;
-  --breakpoint-md: 700px;
+  --breakpoint-sm: 400px;
+  --breakpoint-md: 750px;
   --breakpoint-lg: 1000px;
-  
+
   --color-primaryBlue: oklch(0.746 0.16 232.661);
   --color-primaryRed: oklch(0.712 0.194 13.428);
+  --color-primaryGreen: oklch(0.871 0.15 154.449);
 
   --font-primary: "Quicksand", sans-serif;
 }
 
-/* Add your keyframes here */
 @keyframes fall {
   from {
     transform: translateY(-50px);
@@ -24,19 +24,38 @@
   }
 }
 
-@keyframes spin_once{
-  to{
+@keyframes smallFall {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin_once {
+  to {
     transform: rotate(360deg);
   }
 }
 
 /* Register the animation with Tailwind */
 @layer utilities {
+  /* .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primaryBlue;
+  } */
+
   .animate-fall {
     animation: fall 1s ease-out forwards;
   }
 
-  .animate-spin_once{
+  .animate-smallFall {
+    animation: smallFall 0.8s ease 1;
+  }
+
+  .animate-spin_once {
     animation: spin_once 1s ease 1;
   }
 }

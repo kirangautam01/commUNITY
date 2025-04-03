@@ -13,7 +13,10 @@ const createCommunity = async (req, res) => {
             return res.status(400).json({ message: "community name already exists" });
         }
 
-        const code = crypto.randomBytes(8).toString('base64').slice(0, 8).replace(/\+/g, '0').replace(/\//g, '1');
+        const generateKey = () => {
+            const randomString = crypto.randomBytes(6).toString('base64').replace(/[^a-zA-Z0-9]/g, '0').slice(0, 7);
+            return `#${randomString}`;
+        };
         const newCommunity = new Community({
             name,
             subtitle,
@@ -21,7 +24,7 @@ const createCommunity = async (req, res) => {
             privacy,
             genre,
             location,
-            communityId: code,
+            communityId: generateKey(),
             creater: req.user._id,
             members: [req.user._id]
         });
@@ -216,30 +219,87 @@ const leaveCommunity = async (req, res) => {
 }
 
 // ------------------------------------------------------------------------------------------------------- FIND COMMUNITY
-const findCommunity = async (req, res) => {
+const searchCommunity = async (req, res) => {
     try {
-        const { title, location, genre, communityId } = req.query;
+        const { searchValue } = req.query;
 
-        let filter = {}; // Start with an empty filter object
-
-        if (title) {
-            filter.name = { $regex: title, $options: "i" }; // Case-insensitive search
-        }
-        if (location) {
-            filter.location = { $regex: location, $options: "i" };
-        }
-        if (genre) {
-            filter.genre = { $regex: genre, $options: "i" };
-        }
-        if (communityId) {
-            filter.communityId = communityId; // Exact match for ID
+        if (!searchValue) {
+            return res.status(400).json({ message: "Search value is required!" });
         }
 
-        const communities = await CommunityModel.find(filter);
-        res.json(communities);
+        let query = {
+            $or: [
+                { communityId: searchValue },
+                { name: { $regex: new RegExp(searchValue, "i") } },
+                { location: { $regex: new RegExp(searchValue, "i") } },
+                { genre: { $regex: new RegExp(searchValue, "i") } }
+            ]
+        };
+
+        const communities = await Community.find(query);
+
+        if (communities.length === 0) {
+            return res.status(404).json({ message: "no community is found" });
+        }
+
+        res.status(200).json(communities);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching communities" });
+        console.error("searching for community: ", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
-module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity };
+// ------------------------------------------------------------------------------------------------------- FILTER COMMUNITY
+const filterCommunity = async (req, res) => {
+    try {
+        const { name, location, genre, createdYear, privacy } = req.body;
+
+        if (!name && !location && !genre && !createdYear && !privacy) {
+            return res.status(400).json({ message: "Please provide at least one filter field." });
+        }
+
+        let query = {};
+
+        // Handle name filter
+        if (name && name.trim() !== "") {
+            query.name = { $regex: new RegExp(name, "i") };
+        }
+
+        // Handle location filter
+        if (location && location.trim() !== "") {
+            query.location = { $regex: new RegExp(location, "i") };
+        }
+
+        // Handle genre filter
+        if (genre && genre.trim() !== "") {
+            query.genre = { $regex: new RegExp(genre, "i") };
+        }
+
+        if (privacy && privacy.trim() !== "") {
+            query.privacy = { $regex: new RegExp(privacy, "i") }
+        }
+
+        // Handle createdYear filter
+        if (createdYear && !isNaN(createdYear)) {
+            query.$expr = {
+                $eq: [
+                    { $year: "$createdAt" }, // Extract the year from createdAt field
+                    parseInt(createdYear), // Compare with the user input year
+                ]
+            };
+        }
+
+        const communities = await Community.find(query);
+
+        if (communities.length === 0) {
+            return res.status(404).json({ message: "No communities found." });
+        }
+
+        res.status(200).json({ message: "community found successfully", data: communities });
+    } catch (error) {
+        console.error("Error searching community:", error);
+        res.status(500).json({ message: "Internal server error.", error: error.message });
+    }
+};
+
+module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity };

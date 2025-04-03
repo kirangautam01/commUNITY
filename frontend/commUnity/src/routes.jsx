@@ -12,6 +12,7 @@ import { Outlet } from "react-router-dom";
 import { AuthProvider } from "./globalContext/AuthContext.jsx";
 import ExploreCommunity from "./components/ExploreCommunity.jsx";
 import FindCommunities from "./components/FindCommunities.jsx";
+import SearchCommunity from "./components/SearchCommunity.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
         children: [
           { path: "", element: <MyCommunity /> },
           { path: "explore", element: <ExploreCommunity /> },
-          { path: "find", element: <FindCommunities /> },
+          { path: "find", element: <SearchCommunity /> },
         ],
       },
       {

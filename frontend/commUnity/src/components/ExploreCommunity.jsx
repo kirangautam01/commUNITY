@@ -70,7 +70,7 @@ function ExploreCommunity() {
       );
 
       if (response.data.message) {
-        const message= response.data.message;
+        const message = response.data.message;
         toast.success(message);
       }
     } catch (error) {
@@ -105,9 +105,10 @@ function ExploreCommunity() {
                   className="text-3xl cursor-pointer transiction-scale duration-400 ease hover:scale-110"
                 />
               </div>
+
               <p className="text-gray-600">
-                ID:{" "}
-                <span className="font-semibold">#{community.communityId}</span>
+                ID:
+                <span className="font-semibold">{community.communityId}</span>
               </p>
               <p className="text-gray-700">
                 {community.subtitle} - {community.location}
