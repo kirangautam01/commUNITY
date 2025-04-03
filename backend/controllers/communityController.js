@@ -191,32 +191,47 @@ const leaveCommunity = async (req, res) => {
     try {
         const { communityId } = req.body;
         const userId = req.user?._id;
-
+        
         if (!communityId) {
-            return res.status(404).json({ message: "community id is required!" });
+            return res.status(404).json({ message: "Community ID is required!" });
+        }
+
+        const community = await Community.findById(communityId);
+
+        if (!community) {
+            return res.status(404).json({ message: "Community not found" });
+        }
+
+        // Check if the user is the creator (admin) of the community
+        if (community.creater.toString() === userId.toString()) {
+            return res.status(403).json({ message: "You're the admin of the community. You cannot leave." });
         }
 
         const updatedCommunity = await Community.findByIdAndUpdate(
             communityId,
-            { $pull: { members: userId } },//remove userId from members array
-            { new: true } //returns the updated document
+            { $pull: { members: userId } }, 
+            { new: true } 
         );
+
         if (!updatedCommunity) {
-            return res.status(404).json({ message: "community not found" });
+            return res.status(404).json({ message: "Community update failed" });
         }
+
         const updatedUser = await User.findByIdAndUpdate(userId,
             { $pull: { memberOf: communityId } },
             { new: true }
         );
+
         if (!updatedUser) {
-            return res.status(404).json({ message: "community Id removing failed in membersOf array." });
+            return res.status(404).json({ message: "Community ID removing failed from user's memberOf array." });
         }
-        res.status(200).json({ message: "You have left the community" })
+
+        res.status(200).json({ message: "You have left the community." });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Community leave failed!" });
     }
-}
+};
 
 // ------------------------------------------------------------------------------------------------------- FIND COMMUNITY
 const searchCommunity = async (req, res) => {
