@@ -191,7 +191,7 @@ const leaveCommunity = async (req, res) => {
     try {
         const { communityId } = req.body;
         const userId = req.user?._id;
-        
+
         if (!communityId) {
             return res.status(404).json({ message: "Community ID is required!" });
         }
@@ -209,8 +209,8 @@ const leaveCommunity = async (req, res) => {
 
         const updatedCommunity = await Community.findByIdAndUpdate(
             communityId,
-            { $pull: { members: userId } }, 
-            { new: true } 
+            { $pull: { members: userId } },
+            { new: true }
         );
 
         if (!updatedCommunity) {
@@ -317,4 +317,28 @@ const filterCommunity = async (req, res) => {
     }
 };
 
-module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity };
+// ------------------------------------------------------------------------------------------------------- DELETE COMMUNITY
+const delCommunity = async (req, res) => {
+    try {
+        const { communityId } = req.body;
+
+        if (!communityId) {
+            return res.status(400).json({ message: "Community ID is required" });
+        }
+
+        // Delete the community (this will trigger the pre-delete middleware)
+        const deletedCommunity = await Community.findOneAndDelete({ _id: communityId });
+
+        if (!deletedCommunity) {
+            return res.status(404).json({ message: "Community not found" });
+        }
+
+        return res.status(200).json({ message: "Community deleted successfully!" });
+    } catch (error) {
+        console.error("Community delete error:", error);
+        return res.status(500).json({ message: "Could not delete community" });
+    }
+};
+
+
+module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity,delCommunity };

@@ -16,6 +16,7 @@ function ExploreCommunity() {
   const [admin, setAdmin] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const userid = localStorage.getItem("userId");
+  const [modalToggle, setModalToggle] = useState(false);
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -97,9 +98,44 @@ function ExploreCommunity() {
     }
   }, [community, userid]);
 
+  const onClose = () => {
+    setModalToggle(false);
+  };
+
+  const onDelete = () => {
+    alert("delete is clicked");
+  };
+
   return (
     <div>
       <Toaster />
+      {/* ------------------------------------------------------------------------------------  modal to confirm delete */}
+      {modalToggle && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 bg-[rgba(0,0,0,0.5)]">
+          <div className="p-6 rounded-lg shadow-xl w-96 bg-white">
+            <h2 className="text-lg font-semibold">Confirm Deletion</h2>
+            <p className="mt-2">
+              Are you sure you want to delete this community? This action cannot
+              be undone.
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                onClick={onDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {community ? (
         <div className="font-primary">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-white p-6 shadow-lg rounded-lg">
@@ -175,7 +211,7 @@ function ExploreCommunity() {
                   }`}
                 >
                   <MdDelete
-                    onClick={() => alert("delete is clicked")}
+                    onClick={()=>setModalToggle(true)}
                     className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200 text-red-500 hover:text-red-700"
                   />
                   <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
