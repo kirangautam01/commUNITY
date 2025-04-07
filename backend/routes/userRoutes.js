@@ -3,7 +3,7 @@ const router = express.Router();
 const { createUser, userInfo } = require('../controllers/userController');
 const upload = require('../config/multerConfig')
 const { sentOtp, otpVerify, loginUser } = require('../controllers/authController')
-const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity,delCommunity } = require('../controllers/communityController');
+const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity } = require('../controllers/communityController');
 const authenticateUser = require('../middleware/myMiddleware');
 
 //auth routes
@@ -24,7 +24,9 @@ router.get('/top10', authenticateUser, top10Communities); //display top 10 commu
 router.delete('/leave_community', authenticateUser, leaveCommunity); //leave community
 router.get('/search_community/', searchCommunity); //search community
 router.post('/filter_Community', filterCommunity); //filter community
-router.delete('/del_community',delCommunity); //delete community
+router.delete('/del_community', delCommunity); //delete community
+router.delete('/del_mem', leaveCommunity); //delete member of community
+router.patch('/edit_community/:communityId', upload.single('image'), editCommunity); //edit community
 
 //account page routes
 router.get('/profile', authenticateUser, userInfo) //user profile

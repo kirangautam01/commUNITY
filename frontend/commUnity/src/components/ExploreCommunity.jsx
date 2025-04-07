@@ -7,6 +7,7 @@ import { IoMdChatboxes } from "react-icons/io";
 import { MdBookmarkAdd } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 function ExploreCommunity() {
   const location = useLocation();
@@ -17,6 +18,7 @@ function ExploreCommunity() {
   const [isAdmin, setIsAdmin] = useState(false);
   const userid = localStorage.getItem("userId");
   const [modalToggle, setModalToggle] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -102,8 +104,36 @@ function ExploreCommunity() {
     setModalToggle(false);
   };
 
-  const onDelete = () => {
-    alert("delete is clicked");
+  const editHandler = (item) =>
+    navigate("/community/explore/edit", { state: { item } });
+
+  // ------------------------------------------------------------------------------------------------------- DELETE COMMUNITY
+  const deleteHandler = async () => {
+    if (!item) {
+      toast.error("Community id is not provided.");
+      return;
+    }
+    try {
+      const response = await axios.delete(
+        "http://localhost:4000/users/del_community",
+        {
+          data: { communityId: item },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        navigate("/community");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log("delete community error: ", error);
+      toast.error(
+        error.response.data.message ||
+          "An error occured while deleting community."
+      );
+    }
   };
 
   return (
@@ -127,7 +157,7 @@ function ExploreCommunity() {
               </button>
               <button
                 className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                onClick={onDelete}
+                onClick={deleteHandler}
               >
                 Delete
               </button>
@@ -171,11 +201,15 @@ function ExploreCommunity() {
                 <span className="font-semibold">Genre:</span> {community.genre}
               </p>
               <p className="text-gray-700">
+                <span className="font-semibold">Members:</span> {community.members.length}
+              </p>
+              
+              <p className="text-gray-700">
                 <span className="font-semibold">Created Date:</span>{" "}
                 {community.createdAt.split("T")[0]}
               </p>
 
-              {/* ------------------------------------------------------------------------------------  icons: edit,delete,join, chat */}
+              {/* --------------------------------------------------------------  ICONS: EDIT,DELETE,JOIN,CHAT */}
               <div className="w-full flex gap-7 p-5">
                 <div className={`relative group`}>
                   <IoMdChatboxes className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200" />
@@ -198,7 +232,7 @@ function ExploreCommunity() {
                   }`}
                 >
                   <AiFillEdit
-                    onClick={() => alert("edit is clicked")}
+                    onClick={() => editHandler(item)}
                     className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200"
                   />
                   <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -211,7 +245,7 @@ function ExploreCommunity() {
                   }`}
                 >
                   <MdDelete
-                    onClick={()=>setModalToggle(true)}
+                    onClick={() => setModalToggle(true)}
                     className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200 text-red-500 hover:text-red-700"
                   />
                   <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">

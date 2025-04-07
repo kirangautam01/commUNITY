@@ -106,6 +106,8 @@ const exploreCommunity = async (req, res) => {
 
     try {
         const { communityId } = req.params;
+        // console.log("Received ID:", communityId); // or req.params, or req.query
+
         const community = await Community.findById(communityId)
             .populate("creater", "username location profilePic")
             .populate("members", "username location profilePic")
@@ -189,8 +191,8 @@ const top10Communities = async (req, res) => {
 // ------------------------------------------------------------------------------------------------------- LEAVE COMMUNITY
 const leaveCommunity = async (req, res) => {
     try {
-        const { communityId } = req.body;
-        const userId = req.user?._id;
+        const { communityId, user } = req.body;
+        const userId = user ? user : req.user?._id;
 
         if (!communityId) {
             return res.status(404).json({ message: "Community ID is required!" });
@@ -340,5 +342,31 @@ const delCommunity = async (req, res) => {
     }
 };
 
+// ------------------------------------------------------------------------------------------------------- EDIT COMMUNITY
+const editCommunity = async (req, res) => {
+    try {
+        const { communityId } = req.params;
 
-module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity,delCommunity };
+        const updateFields = {
+            ...req.body,
+        };
+
+        if (req.file) {
+            updateFields.image = req.file.path;
+        }
+
+        const updateCommunity = await Community.findByIdAndUpdate(communityId, { $set: updateFields }, { new: true, runValidators: true });
+
+        if (!updateCommunity) {
+            return res.status(404).json({ message: "community not found" });
+        }
+
+        res.status(200).json({ message: "community updated successfully", data: updateCommunity });
+    } catch (error) {
+        console.log("error updating community: ", error);
+        res.status(500).json({ message: error || "internal server error" });
+    }
+}
+
+
+module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity };
