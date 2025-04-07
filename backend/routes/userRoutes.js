@@ -5,16 +5,17 @@ const upload = require('../config/multerConfig')
 const { sentOtp, otpVerify, loginUser } = require('../controllers/authController')
 const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity } = require('../controllers/communityController');
 const authenticateUser = require('../middleware/myMiddleware');
+const notice = require('../controllers/noticeController');
 
-//auth routes
+//AUTH ROUTES
 router.post('/otp_sent', sentOtp);  //send otp
 router.post('/otp_verify', otpVerify); //verify otp
 
-// User routes
+//USERS ROUTES
 router.post('/register', upload.single('profilePic'), createUser); //signup
 router.post('/login', loginUser); //login
 
-//communities
+//COMMUNITIES ROUTES
 router.post('/create_community', upload.single('image'), authenticateUser, createCommunity); //create community
 router.get('/my_communities', authenticateUser, getCommunitiesByCreater); //fetch communities by creater
 router.get('/joined_communities', authenticateUser, getCommunitiesByMember); //fetch communities by member
@@ -28,7 +29,11 @@ router.delete('/del_community', delCommunity); //delete community
 router.delete('/del_mem', leaveCommunity); //delete member of community
 router.patch('/edit_community/:communityId', upload.single('image'), editCommunity); //edit community
 
-//account page routes
+//ACCOUNT PAGE ROUTES
 router.get('/profile', authenticateUser, userInfo) //user profile
+
+//NOTICE PAGE ROUTES
+router.post('/create_notice', authenticateUser, notice.createNotice); //create notice
+router.get('/get_notice/:communityId', notice.getNoticesByCommunity); //fetch notice by community
 
 module.exports = router;
