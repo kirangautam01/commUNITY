@@ -9,7 +9,8 @@ function Header() {
   
   return (
     <>
-      <div className="md:px-4 overflow-hidden flex justify-between md:mt-4 font-primary font-bold">
+    <div className="sticky top-0 z-50 shadow-2xl">
+      <div className="bg-white md:px-4 overflow-hidden flex justify-between md:mt-4 font-primary font-bold">
         <NavLink to="/">
           <img
             src="/images/logo.jpeg"
@@ -20,7 +21,7 @@ function Header() {
         <nav
           className={`transition-left duration-400 ease-in-out ${
             showMenu ? "left-0" : "-left-full"
-          } md:block absolute md:static hidden bg-sky-400 md:bg-white h-lvh md:h-auto md:w-auto w-screen z-50`}
+          } md:block absolute md:static bg-sky-400 md:bg-white h-lvh md:h-auto md:w-auto w-screen z-50`}
         >
           <ul className="flex flex-col md:flex-row justify-around items-center md:space-x-6 md:space-y-0 space-y-20 md:mt-0 mt-20 md:text-base text-2xl">
             <NavLink to="/events">
@@ -86,7 +87,8 @@ function Header() {
           className="mr-4 md:hidden text-primaryBlue size-8 cursor-pointer self-center"
         />
       </div>
-      <hr class="h-0.5 bg-primaryBlue border-none mx-auto mt-2" />
+      {/* <hr class="h-0.5 bg-primaryBlue border-none mx-auto mt-2" /> */}
+      </div>
     </>
   );
 }

@@ -1,8 +1,10 @@
 const Notice = require('../models/noticeModel');
+const Community = require('../models/communityModel');
 
 // Create Notice Controller
 exports.createNotice = async (req, res) => {
     const { heading, body, communityId, author } = req.body;
+    const userId = req.user?._id;
 
     // Validation
     if (!heading || !body || !communityId || !author) {
@@ -16,6 +18,7 @@ exports.createNotice = async (req, res) => {
             body,
             communityId,
             author,
+            authorId: userId,
         });
 
         // Save the notice to the database
@@ -56,3 +59,40 @@ exports.getNoticesByCommunity = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+exports.deleteNotice = async (req, res) => {
+    try {
+        const { communityId, noticeId } = req.body;
+        const userId = req.user?._id;
+
+        // console.log("community Id: ", communityId, "noticeId: ", noticeId);
+        const community = await Community.findById(communityId);
+        // console.log(community);
+        if (!community || !community.creater) {
+            return res.status(404).json({ message: "Community or creator not found." });
+        }
+
+        const notice = await Notice.findById(noticeId);
+        // console.log("notice author: ",notice.authorId);
+        if (!notice || !notice.authorId) {
+            return res.status(404).json({ message: "Notice or author not found." });
+        }
+
+        const isAdmin = community.creater?.equals(userId);
+        const isAuthor = notice.authorId?.equals(userId);
+
+        if (isAdmin || isAuthor) {
+            await Notice.findByIdAndDelete(noticeId);
+            return res.status(200).json({ message: "Notice deleted successfully." });
+        } else {
+            return res.status(401).json({ message: "You must be the community admin or the notice author to delete this notice." });
+        }
+    } catch (error) {
+        console.error("Notice delete error:", error);
+        res.status(500).json({ message: "An error occurred while deleting the notice." });
+    }
+};
+
+
+

@@ -12,7 +12,12 @@ const noticeSchema = new mongoose.Schema({
   },
   author: {
     type: String,
-    required: true, // Author is required
+    required: true, 
+  },
+  authorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    require: true,
   },
   communityId: {
     type: mongoose.Schema.Types.ObjectId,

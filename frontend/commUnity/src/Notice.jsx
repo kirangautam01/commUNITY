@@ -80,13 +80,21 @@ function Notice() {
       </div>
 
       {/* Notices Section */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-2 overflow-y-auto">
         {selectedCommunity ? (
           <NoticeComm communityId={selectedCommunity._id} />
         ) : (
+          <div className="text-center max-w-md mx-auto mt-40">
+          <img
+            src="/images/login_side.png" 
+            alt="Select a community"
+            className="w-64 h-64 mx-auto mb-4"
+          />
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">No Community Selected</h2>
           <p className="text-gray-500">
-            Select a community to view its notices.
+            Please select a community from the sidebar to view its latest notices and updates.
           </p>
+        </div>
         )}
       </div>
     </div>
@@ -94,20 +102,3 @@ function Notice() {
 }
 
 export default Notice;
-
-{
-  /* <div className="relative bg-yellow-100 text-black p-6 rounded-lg shadow-2xl w-80 h-auto max-w-xs">
-          <div className="absolute top-2 right-2">
-            <img
-              src="/images/pin2.png"
-              alt="pin"
-              className="h-6 w-6 filter drop-shadow-[0px_12px_8px_rgb(0,0,0)]"
-            />
-          </div>
-          <h2 className="font-semibold text-xl mb-2">Notice 1</h2>
-          <p className="text-sm">
-            This is a sample notice with some text to give you an idea of the
-            content structure.
-          </p>
-        </div> */
-}

@@ -35,5 +35,6 @@ router.get('/profile', authenticateUser, userInfo) //user profile
 //NOTICE PAGE ROUTES
 router.post('/create_notice', authenticateUser, notice.createNotice); //create notice
 router.get('/get_notice/:communityId', notice.getNoticesByCommunity); //fetch notice by community
+router.delete('/del_notice', authenticateUser, notice.deleteNotice); //delete notice
 
 module.exports = router;
