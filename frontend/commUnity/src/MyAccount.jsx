@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { FaCamera } from "react-icons/fa6";
+import toast, { Toaster } from "react-hot-toast";
 
 function MyAccount() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [data, setData] = useState();
+  const fileInputRef = useRef(null); // 👈 to trigger hidden input
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/users/profile",
-          { withCredentials: true }
-        );
-
-        // console.log(response.data);
+        const response = await axios.get(`${backendUrl}/users/profile`, {
+          withCredentials: true,
+        });
         setData(response.data);
       } catch (error) {
         console.log("error", error);
@@ -25,14 +26,68 @@ function MyAccount() {
     return <div>loading...</div>;
   }
 
+  // 👇 this triggers hidden file input
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
+
+  // 👇 actual picture change logic
+  const pictureChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePic", file);
+    try {
+      const response = await axios.patch(
+        `${backendUrl}/users/changeProfile`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      // update local state with new image
+      setData((prevData) => ({
+        ...prevData,
+        user: {
+          ...prevData.user,
+          profilePic: response.data.profilePic,
+        },
+      }));
+      toast.success("Picture updated successfully");
+    } catch (error) {
+      console.error("Error uploading picture:", error);
+      toast.error("error updating profile.");
+    }
+  };
+
   return (
     <div className="font-primary mt-20 w-3/4 mx-auto">
+      <Toaster />
       {/* header-section */}
       <div className="flex flex-col md:flex-row items-center gap-5 bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4">
-        <div className="overflow-hidden rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
+        <div className="relative rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
           <img
             src={data.user.profilePic}
-            className="w-full h-full object-cover"
+            alt="profile"
+            className="w-full h-full object-cover rounded-full"
+          />
+          <FaCamera
+            className="text-white absolute bottom-3 right-3 md:right-4 md:bottom-4 hover:cursor-pointer"
+            onClick={handleIconClick}
+          />
+          {/* Hidden input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={pictureChange}
+            accept="image/*"
+            name="profilePic"
+            className="hidden"
           />
         </div>
         <h1 className="text-2xl md:text-7xl font-extrabold text-white uppercase drop-shadow-xl">
@@ -48,7 +103,6 @@ function MyAccount() {
           <h1 className="text-2xl md:text-4xl">{data.user.location}</h1>
           <p>Community joined: {data.user.memberOf.length}</p>
         </div>
-        
       </div>
     </div>
   );

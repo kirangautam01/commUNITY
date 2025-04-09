@@ -10,6 +10,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 function ExploreCommunity() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const location = useLocation();
   const item = location.state?.communityId;
   const [community, setCommunity] = useState(null);
@@ -23,9 +24,7 @@ function ExploreCommunity() {
   useEffect(() => {
     const fetchCommunity = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/users/explore/${item}`
-        );
+        const response = await axios.get(`${backendUrl}/users/explore/${item}`);
 
         if (response.data) {
           setCommunity(response.data);
@@ -47,7 +46,7 @@ function ExploreCommunity() {
   const joinCommunity = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:4000/users/join_community/${item}`,
+        `${backendUrl}/users/join_community/${item}`,
         {},
         {
           withCredentials: true,
@@ -73,7 +72,7 @@ function ExploreCommunity() {
   const handleCommunityLeave = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:4000/users/leave_community",
+        `${backendUrl}/users/leave_community`,
         {
           data: { communityId: item },
           withCredentials: true,
@@ -114,12 +113,9 @@ function ExploreCommunity() {
       return;
     }
     try {
-      const response = await axios.delete(
-        "http://localhost:4000/users/del_community",
-        {
-          data: { communityId: item },
-        }
-      );
+      const response = await axios.delete(`${backendUrl}/users/del_community`, {
+        data: { communityId: item },
+      });
 
       if (response.status === 200) {
         toast.success(response.data.message);
@@ -201,9 +197,10 @@ function ExploreCommunity() {
                 <span className="font-semibold">Genre:</span> {community.genre}
               </p>
               <p className="text-gray-700">
-                <span className="font-semibold">Members:</span> {community.members.length}
+                <span className="font-semibold">Members:</span>{" "}
+                {community.members.length}
               </p>
-              
+
               <p className="text-gray-700">
                 <span className="font-semibold">Created Date:</span>{" "}
                 {community.createdAt.split("T")[0]}

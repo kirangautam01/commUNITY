@@ -4,7 +4,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Signup() {
-  const Navigate= useNavigate();
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const Navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [otpFormVisible, setOtpFormVisible] = useState(false);
   const [otp, setOtp] = useState("");
@@ -20,10 +21,9 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/users/otp_sent",
-        { email }
-      );
+      const response = await axios.post(`${backendUrl}/users/otp_sent`, {
+        email,
+      });
 
       if (response.data.exists) {
         // Show error if the email already exists
@@ -46,10 +46,10 @@ function Signup() {
   const handleSubmit2 = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:4000/users/otp_verify",
-        { otp, email }
-      );
+      const response = await axios.post(`${backendUrl}/users/otp_verify`, {
+        otp,
+        email,
+      });
 
       toast.success(response.data.message);
       setMainFormVisible(true);
@@ -85,12 +85,12 @@ function Signup() {
     formDataToSend.append("username", formData.username);
     formDataToSend.append("email", email); //email is already in the state
     formDataToSend.append("password", formData.password);
-    formDataToSend.append("location",formData.location);
+    formDataToSend.append("location", formData.location);
     formDataToSend.append("profilePic", formData.profilePic);
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/users/register",
+        `${backendUrl}/users/register`,
         formDataToSend,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -98,7 +98,7 @@ function Signup() {
       );
 
       toast.success(response.data.message);
-      Navigate('/login');
+      Navigate("/login");
     } catch (error) {
       toast.error("something went wrong. please try again.");
     }
@@ -199,7 +199,7 @@ function Signup() {
                 className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm"
                 required
               />
-              
+
               <label>Location: </label>
               <input
                 type="text"

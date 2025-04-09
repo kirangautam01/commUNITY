@@ -9,6 +9,7 @@ import { FaUsersViewfinder } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 
 function MyCommunity() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [showForm, setShowForm] = useState(false);
   const [spin, setSpin] = useState(false);
 
@@ -28,7 +29,7 @@ function MyCommunity() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/users/create_community",
+        `${backendUrl}/users/create_community`,
         formData,
         {
           headers: {

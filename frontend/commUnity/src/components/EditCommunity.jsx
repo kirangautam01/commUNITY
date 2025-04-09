@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 function EditCommunity() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const location = useLocation();
   const item = location.state || "";
   const [message, setMessage] = useState("");
@@ -24,7 +25,7 @@ function EditCommunity() {
     const fetchCommunity = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/users/explore/${item.item}`
+          `${backendUrl}/users/explore/${item.item}`
         );
         if (response.data) {
           setCommunity(response.data);
@@ -70,7 +71,7 @@ function EditCommunity() {
     }
     try {
       const res = await axios.patch(
-        `http://localhost:4000/users/edit_community/${community._id}`,
+        `${backendUrl}/users/edit_community/${community._id}`,
         data,
         {
           headers: {
@@ -90,12 +91,9 @@ function EditCommunity() {
   }
   const handleDeleteMember = async (memberId) => {
     try {
-      const response = await axios.delete(
-        "http://localhost:4000/users/del_mem",
-        {
-          data: { communityId: item.item, user: memberId },
-        }
-      );
+      const response = await axios.delete(`${backendUrl}/users/del_mem`, {
+        data: { communityId: item.item, user: memberId },
+      });
 
       if (response.data.message) {
         const message = "member remove successfully";

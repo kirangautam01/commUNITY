@@ -4,6 +4,7 @@ import axios from "axios";
 import NoticeComm from "./components/NoticeComm";
 
 function Notice() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [communities, setCommunities] = useState([]);
@@ -13,7 +14,7 @@ function Notice() {
     const fetchCommunities = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:4000/users/joined_communities",
+          `${backendUrl}/users/joined_communities`,
           { withCredentials: true }
         );
         setCommunities(res.data || []);

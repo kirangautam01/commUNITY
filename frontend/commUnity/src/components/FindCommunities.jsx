@@ -4,13 +4,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function FIndCommunities(props) {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [top10, setTop10] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const top10Communities = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/users/top10", {
+        const response = await axios.get(`${backendUrl}/users/top10`, {
           withCredentials: true,
         });
 

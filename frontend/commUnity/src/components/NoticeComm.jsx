@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { AiTwotoneDelete } from "react-icons/ai";
 
 function NoticeComm(props) {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [heading, setHeading] = useState("");
   const [body, setBody] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
@@ -23,7 +24,7 @@ function NoticeComm(props) {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/users/create_notice",
+        `${backendUrl}/users/create_notice`,
         { heading, body, communityId: props.communityId, author: username },
         { withCredentials: true }
       );
@@ -44,7 +45,7 @@ function NoticeComm(props) {
     const fetchNotices = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/users/get_notice/${props.communityId}`
+          `${backendUrl}/users/get_notice/${props.communityId}`
         );
         setNotices(response.data.notices);
       } catch (err) {
@@ -66,16 +67,13 @@ function NoticeComm(props) {
   const handleDelete = async (noticeId) => {
     try {
       // Sending data in the request body using the `data` property
-      const response = await axios.delete(
-        "http://localhost:4000/users/del_notice",
-        {
-          data: {
-            communityId: props.communityId,
-            noticeId,
-          },
-          withCredentials: true, // This sends cookies if needed for authentication
-        }
-      );
+      const response = await axios.delete(`${backendUrl}/users/del_notice`, {
+        data: {
+          communityId: props.communityId,
+          noticeId,
+        },
+        withCredentials: true, // This sends cookies if needed for authentication
+      });
 
       if (response.status === 200) {
         toast.success("Notice deleted successfully" || response.data.message);

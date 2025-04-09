@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const { findById } = require("../models/communityModel");
 
 const createUser = async (req, res) => {
     try {
-        const { username, email, password,location, memberOf } = req.body;
+        const { username, email, password, location, memberOf } = req.body;
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -53,4 +54,33 @@ const userInfo = async (req, res) => {
     }
 }
 
-module.exports = { createUser, userInfo };
+// ------------------------------------------------------------------------------------------------------- PICTURE CHANGE
+const pictureChange = async (req, res) => {
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(400).json({ message: "cannot find user in database." });
+    }
+
+    const newPicture = req.file.path;
+
+    if (!newPicture) {
+        return res.status(400).json({ message: "no picture received." });
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(userId, { profilePic: newPicture }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        res.status(200).json({ message: "profile picture updated successfully." });
+    } catch (error) {
+        res.status(500).json({ message: "error occured" });
+        console.log("profile update error: ", error);
+    }
+};
+
+
+module.exports = { createUser, userInfo, pictureChange };

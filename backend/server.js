@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const dbConnection = require('./config/dbconfig')
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
+require('dotenv').config();
 
 //database connection
 dbConnection();
@@ -14,7 +15,7 @@ app.use(cookieParser());
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173",  // ✅ Allow frontend requests
+  origin: process.env.FRONTEND_URL,  // ✅ Allow frontend requests
   credentials: true,  // ✅ Allow cookies
 }));
 

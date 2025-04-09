@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import FindCommunities from "./FindCommunities";
 
 function SearchCommunity() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [showFilter, setShowFilter] = useState(false);
   const [mainSearchValue, setMainSearchValue] = useState("");
   const [searchData, setSearchData] = useState([]);
@@ -41,7 +42,7 @@ function SearchCommunity() {
   const heroSearch = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/users/search_community",
+        `${backendUrl}/users/search_community`,
         {
           params: { searchValue: mainSearchValue }, // Pass as query parameter
         }
@@ -64,7 +65,7 @@ function SearchCommunity() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:4000/users/filter_community",
+        `${backendUrl}/users/filter_community`,
         formData
       );
 

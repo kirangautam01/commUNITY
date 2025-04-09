@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function YourCommunity() {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [communities, setCommunities] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ function YourCommunity() {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://localhost:4000/users/my_communities",
+          `${backendUrl}/users/my_communities`,
           { withCredentials: true }
         );
 

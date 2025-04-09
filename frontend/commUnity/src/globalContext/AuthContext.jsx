@@ -4,6 +4,7 @@ import axios from "axios";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -11,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     // Check if the user is authenticated
     const verifyUser = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/users/profile", {
+        const response = await axios.get(`${backendUrl}/users/profile`, {
           withCredentials: true, // Ensures cookies are sent with the request
         });
         setUser(response.data.user);
