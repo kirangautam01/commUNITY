@@ -4,7 +4,7 @@ import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
 
 function MyAccount() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [data, setData] = useState();
   const fileInputRef = useRef(null); // 👈 to trigger hidden input
 

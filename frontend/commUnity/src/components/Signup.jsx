@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Signup() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const Navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [otpFormVisible, setOtpFormVisible] = useState(false);

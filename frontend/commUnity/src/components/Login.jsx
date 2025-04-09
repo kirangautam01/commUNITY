@@ -4,13 +4,14 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 function Login() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const Navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("backend url: ",backendUrl);
     try {
       const response = await axios.post(
         `${backendUrl}/users/login`,

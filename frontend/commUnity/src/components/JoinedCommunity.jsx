@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function JoinedCommunity() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [communities, setCommunities] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);

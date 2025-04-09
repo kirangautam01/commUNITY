@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { AiTwotoneDelete } from "react-icons/ai";
 
 function NoticeComm(props) {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [heading, setHeading] = useState("");
   const [body, setBody] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);

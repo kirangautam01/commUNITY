@@ -10,7 +10,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 function ExploreCommunity() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const location = useLocation();
   const item = location.state?.communityId;
   const [community, setCommunity] = useState(null);

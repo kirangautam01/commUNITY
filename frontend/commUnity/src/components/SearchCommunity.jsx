@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import FindCommunities from "./FindCommunities";
 
 function SearchCommunity() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [showFilter, setShowFilter] = useState(false);
   const [mainSearchValue, setMainSearchValue] = useState("");
   const [searchData, setSearchData] = useState([]);

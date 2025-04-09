@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 function EditCommunity() {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const location = useLocation();
   const item = location.state || "";
   const [message, setMessage] = useState("");
