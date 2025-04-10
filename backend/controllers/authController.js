@@ -83,8 +83,8 @@ const loginUser = async (req, res) => {
         // Set token in HTTP-only cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // Use true in production (HTTPS)
-            sameSite: "lax",
+            secure: true, // Use true in production (HTTPS)
+            sameSite: "None",
             maxAge: 60 * 60 * 1000, // 1 hour
             path: "/",
         });
