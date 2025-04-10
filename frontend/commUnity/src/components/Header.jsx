@@ -22,7 +22,7 @@ function Header() {
   return (
     <>
       <div className="sticky top-0 z-50 shadow-2xl">
-        <div className="bg-white md:px-4 overflow-hidden flex justify-between md:mt-4 font-primary font-bold">
+        <div className="bg-white min-h-20 md:h-auto md:px-4 flex justify-between items-center md:mt-4 font-primary font-bold relative z-50">
           <NavLink to="/">
             <img
               src="/images/logo.jpeg"
@@ -33,7 +33,7 @@ function Header() {
           <nav
             className={`transition-left duration-400 ease-in-out ${
               showMenu ? "left-0" : "-left-full"
-            } md:block absolute md:static bg-sky-400 md:bg-white h-lvh md:h-auto md:w-auto w-screen z-50`}
+            } absolute top-0 md:static bg-sky-400 md:bg-white h-screen md:h-auto md:w-auto w-screen z-50`}
           >
             <ul className="flex flex-col md:flex-row justify-around items-center md:space-x-6 md:space-y-0 space-y-20 md:mt-0 mt-20 md:text-base text-2xl">
               <NavLink to="/events">
