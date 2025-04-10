@@ -88,7 +88,7 @@ const loginUser = async (req, res) => {
             maxAge: 60 * 60 * 1000, // 1 hour
             path: "/",
         });
-        res.json({ message: "Login successful", user});
+        res.json({ message: "Login successful", user });
     } catch (error) {
         console.error("Login Error:", error); // Debugging
 
@@ -99,4 +99,14 @@ const loginUser = async (req, res) => {
     }
 }
 
-module.exports = { sentOtp, otpVerify, loginUser }
+const logout = async (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "None",
+        secure: true, // 👈 only for HTTPS
+    });
+
+    res.status(200).json({ message: "Logged out successfully" });
+}
+
+module.exports = { sentOtp, otpVerify, loginUser, logout }

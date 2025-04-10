@@ -6,7 +6,6 @@ import {
   FaComments,
   FaArrowRight,
 } from "react-icons/fa";
-import Footer from "./components/Footer";
 
 function Home() {
   return (
@@ -226,7 +225,6 @@ function Home() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

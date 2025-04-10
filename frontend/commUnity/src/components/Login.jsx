@@ -49,7 +49,7 @@ function Login() {
         />
       </div>
       <div className="relative w-full md:w-1/2 h-full bg-primaryRed overflow-hidden">
-        <h1 className="absolute top-2 left-1/2 transform -translate-x-1/2 text-2xl sm:text-4xl md:text-3xl lg:text-4xl text-primaryBlue font-bold leading-none">
+        <h1 className="w-full block text-center text-2xl sm:text-4xl md:text-3xl lg:text-4xl text-primaryBlue font-bold leading-none">
           commUNITY
           <br />
           <span className="text-white text-sm sm:text-lg font-normal leading-tight">
@@ -64,7 +64,7 @@ function Login() {
           />
           <form
             onSubmit={handleSubmit}
-            className="grid gap-4 w-full  mx-auto text-white text-base sm:text-xl sm:w-3/4"
+            className="grid gap-4 w-full p-4 sm:p-0  mx-auto text-white text-base sm:text-xl sm:w-3/4"
           >
             <label className="text-sky-400">Email</label>
             <input

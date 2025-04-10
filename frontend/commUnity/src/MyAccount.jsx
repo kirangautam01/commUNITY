@@ -31,7 +31,7 @@ function MyAccount() {
     fileInputRef.current.click();
   };
 
-  // 👇 actual picture change logic
+  // -------------------------------------------------------- actual picture change logic
   const pictureChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -65,36 +65,58 @@ function MyAccount() {
     }
   };
 
+  // -------------------------------------------------------- logout function
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${backendUrl}/users/logout`, {
+        withCredentials: true,
+      });
+
+      // Clear any localStorage values if used
+      localStorage.clear();
+
+      // Redirect to login
+      window.location.href = "/login";
+    } catch (err) {
+      toast.error("Logout failed. Please try again.");
+    }
+  };
+
   return (
     <div className="font-primary mt-20 w-3/4 mx-auto">
       <Toaster />
       {/* header-section */}
-      <div className="flex flex-col md:flex-row items-center gap-5 bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4">
-        <div className="relative rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
-          <img
-            src={data.user.profilePic}
-            alt="profile"
-            className="w-full h-full object-cover rounded-full"
-          />
-          <FaCamera
-            className="text-white absolute bottom-3 right-3 md:right-4 md:bottom-4 hover:cursor-pointer"
-            onClick={handleIconClick}
-          />
-          {/* Hidden input */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={pictureChange}
-            accept="image/*"
-            name="profilePic"
-            className="hidden"
-          />
+      <div className="bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4 text-white">
+        <p className="float-right " onClick={handleLogout}>
+          logout
+        </p>
+        <div className="flex flex-col md:flex-row items-center gap-5 ">
+          <div className="relative rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
+            <img
+              src={data.user.profilePic}
+              alt="profile"
+              className="w-full h-full object-cover rounded-full"
+            />
+            <FaCamera
+              className="text-white absolute bottom-3 right-3 md:right-4 md:bottom-4 hover:cursor-pointer"
+              onClick={handleIconClick}
+            />
+            {/* Hidden input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={pictureChange}
+              accept="image/*"
+              name="profilePic"
+              className="hidden"
+            />
+          </div>
+          <h1 className="text-2xl md:text-7xl font-extrabold text-white uppercase drop-shadow-xl">
+            <span className="font-normal text-sm lowercase">Profile</span>
+            <br />
+            {data.user.username}
+          </h1>
         </div>
-        <h1 className="text-2xl md:text-7xl font-extrabold text-white uppercase drop-shadow-xl">
-          <span className="font-normal text-sm lowercase">Profile</span>
-          <br />
-          {data.user.username}
-        </h1>
       </div>
 
       {/* description-section */}

@@ -13,6 +13,7 @@ import { AuthProvider } from "./globalContext/AuthContext.jsx";
 import ExploreCommunity from "./components/ExploreCommunity.jsx";
 import SearchCommunity from "./components/SearchCommunity.jsx";
 import EditCommunity from "./components/EditCommunity.jsx";
+import Footer from "./components/Footer.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       <AuthProvider>
         <Header />
         <Outlet />
+        <Footer/>
       </AuthProvider>
     ),
     children: [

@@ -151,7 +151,7 @@ function Footer() {
                   href="romangautam71399@gmail.com"
                   className="hover:text-white transition-colors"
                 >
-                  romangautam71399@gmail.com
+                  romangautam71399<br/>@gmail.com
                 </a>
               </p>
               <p>Phone: (+977) 9817313776</p>
