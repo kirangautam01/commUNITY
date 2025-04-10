@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -7,6 +8,7 @@ function MyAccount() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [data, setData] = useState();
   const fileInputRef = useRef(null); // 👈 to trigger hidden input
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +78,7 @@ function MyAccount() {
       localStorage.clear();
 
       // Redirect to login
-      window.location.href = "/login";
+      navigate("/login");
     } catch (err) {
       toast.error("Logout failed. Please try again.");
     }
