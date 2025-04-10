@@ -8,6 +8,7 @@ require('dotenv').config();
 const sentOtp = async (req, res) => {
     try {
         const { email } = req.body;
+        // console.log(process.env.EMAIL_PASS);
 
         if (!email) {
             return res.status(400).json({ message: "Email is required" });
@@ -45,7 +46,7 @@ const sentOtp = async (req, res) => {
         console.error(error); // Log the error to the server console
         res.status(500).json({ message: "Server error" });
     }
-};
+}; 
 
 const otpVerify = async (req, res) => {
     const { otp, email } = req.body;
