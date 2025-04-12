@@ -132,6 +132,11 @@ function ExploreCommunity() {
     }
   };
 
+  // ------------------------------------------------------------------------------------------------------- DELETE COMMUNITY
+  const goToChatbox = () => {
+    navigate(`/chatbox/${item}`);
+  };
+
   return (
     <div>
       <Toaster />
@@ -209,7 +214,10 @@ function ExploreCommunity() {
               {/* --------------------------------------------------------------  ICONS: EDIT,DELETE,JOIN,CHAT */}
               <div className="w-full flex gap-7 p-5">
                 <div className={`relative group`}>
-                  <IoMdChatboxes className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200" />
+                  <IoMdChatboxes
+                    onClick={goToChatbox}
+                    className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200"
+                  />
                   <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     Chat
                   </span>
@@ -254,7 +262,7 @@ function ExploreCommunity() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center md:items-start gap-10 p-10 bg-gray-100 rounded-lg shadow-lg">
-            {/* Admin / Creator Section */}
+            {/* --------------------------------------------------------------  ADMIN / CREATER SECTION */}
             <div className="p-10 flex flex-col items-center bg-white shadow-md rounded-lg">
               <img
                 src={community.creater.profilePic}
@@ -272,7 +280,7 @@ function ExploreCommunity() {
               </p>
             </div>
 
-            {/* Members Section */}
+            {/* -------------------------------------------------------------------------  MEMBER SECTION */}
             <div className="flex-grow w-full md:w-auto bg-white shadow-md rounded-lg p-6">
               <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center md:text-left">
                 Members

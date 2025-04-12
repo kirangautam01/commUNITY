@@ -14,6 +14,7 @@ import ExploreCommunity from "./components/ExploreCommunity.jsx";
 import SearchCommunity from "./components/SearchCommunity.jsx";
 import EditCommunity from "./components/EditCommunity.jsx";
 import Footer from "./components/Footer.jsx";
+import Chatbox from "./components/Chatbox.jsx";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,16 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />, // Protect MyAccount
         children: [{ path: "", element: <MyAccount /> }],
       },
+      {
+        path: "/chatbox",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: ":id", // Accept the dynamic community ID here
+            element: <Chatbox />,
+          },
+        ],
+      },      
     ],
   },
 ]);

@@ -89,7 +89,7 @@ function MyAccount() {
       <Toaster />
       {/* header-section */}
       <div className="bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4 text-white">
-        <p className="float-right " onClick={handleLogout}>
+        <p className="float-right hover:cursor-pointer" onClick={handleLogout}>
           logout
         </p>
         <div className="flex flex-col md:flex-row items-center gap-5 ">
