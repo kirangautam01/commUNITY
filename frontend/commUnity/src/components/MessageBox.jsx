@@ -30,16 +30,15 @@ const MessageBox = () => {
       const newMessage = {
         communityId,
         message,
-        sender: currentUser, // ✅ Use actual username
+        sender: currentUser,
       };
-
+  
       socket.emit('send-message', newMessage);
-
-      setMessages((prev) => [...prev, { ...newMessage }]);
       setMessage('');
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  
 
   return (
     <div className="h-full flex flex-col p-4">
@@ -61,7 +60,7 @@ const MessageBox = () => {
         ))}
         <div ref={bottomRef}></div>
       </div>
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-4 flex-col sm:flex-row">
         <input
           className="flex-1 border px-4 py-2 rounded"
           value={message}

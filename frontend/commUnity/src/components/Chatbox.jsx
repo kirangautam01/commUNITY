@@ -25,7 +25,7 @@ const ChatUI = () => {
   }, [id]);
 
   return (
-    <div className="flex flex-col md:flex-row h-screen md:h-[80vh] bg-gray-50 font-sans p-4 gap-4">
+    <div className="flex flex-col md:flex-row h-screen md:h-[80vh] bg-gray-50 p-4 gap-4 font-primary">
       <Toaster />
 
       {/* Members List */}
