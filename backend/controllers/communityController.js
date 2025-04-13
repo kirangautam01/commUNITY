@@ -369,4 +369,29 @@ const editCommunity = async (req, res) => {
 }
 
 
-module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity };
+// ----------------------------------------------------------------------------------------------------- CHECK USER IS_MEMBER
+const isUserMember = async (req, res) => {
+    const { communityId, userId } = req.params;
+  
+    if (!communityId || !userId) {
+      return res.status(400).json({ message: "Community ID and User ID are required." });
+    }
+  
+    try {
+      const community = await Community.findById(communityId);
+  
+      if (!community) {
+        return res.status(404).json({ message: "Community not found." });
+      }
+  
+      const isMember = community.members.includes(userId);
+  
+      res.status(200).json({ isMember });
+    } catch (error) {
+      console.error("Error checking membership:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  };
+  
+
+module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember };

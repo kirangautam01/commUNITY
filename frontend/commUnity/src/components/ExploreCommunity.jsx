@@ -132,9 +132,24 @@ function ExploreCommunity() {
     }
   };
 
-  // ------------------------------------------------------------------------------------------------------- DELETE COMMUNITY
-  const goToChatbox = () => {
-    navigate(`/chatbox/${item}`);
+  // ------------------------------------------------------------------------------------ TO CHECK WHETHER USER IS MEMBER OR NOT
+  const checkMember = async () => {
+    try {
+      const response = await axios.get(
+        `${backendUrl}/users/isMember/${item}/${userid}`
+      );
+
+      if (response.data.isMember) {
+        navigate(`/chatbox/${item}`);
+      } else {
+        toast.error("You are not a member of this community.");
+      }
+    } catch (error) {
+      console.error("Error checking membership:", error.response || error);
+
+      const message = error.response?.data?.message || "Something went wrong.";
+      toast.error(message);
+    }
   };
 
   return (
@@ -213,9 +228,9 @@ function ExploreCommunity() {
 
               {/* --------------------------------------------------------------  ICONS: EDIT,DELETE,JOIN,CHAT */}
               <div className="w-full flex gap-7 p-5">
-                <div className={`relative group`}>
+                <div className="relative group">
                   <IoMdChatboxes
-                    onClick={goToChatbox}
+                    onClick={checkMember}
                     className="size-7 hover:cursor-pointer hover:scale-105 transition-transform duration-200"
                   />
                   <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">

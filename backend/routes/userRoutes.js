@@ -3,7 +3,7 @@ const router = express.Router();
 const { createUser, userInfo, pictureChange } = require('../controllers/userController');
 const upload = require('../config/multerConfig')
 const { sentOtp, otpVerify, loginUser, logout } = require('../controllers/authController')
-const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity } = require('../controllers/communityController');
+const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember } = require('../controllers/communityController');
 const authenticateUser = require('../middleware/myMiddleware');
 const notice = require('../controllers/noticeController');
 
@@ -15,7 +15,7 @@ router.post('/otp_verify', otpVerify); //verify otp
 router.post('/register', upload.single('profilePic'), createUser); //signup
 router.post('/login', loginUser); //login
 router.patch('/changeProfile', upload.single('profilePic'), authenticateUser, pictureChange); //profile change
-router.get('/logout/',logout); //logout user
+router.get('/logout/', logout); //logout user
 
 //COMMUNITIES ROUTES
 router.post('/create_community', upload.single('image'), authenticateUser, createCommunity); //create community
@@ -30,6 +30,7 @@ router.post('/filter_Community', filterCommunity); //filter community
 router.delete('/del_community', delCommunity); //delete community
 router.delete('/del_mem', leaveCommunity); //delete member of community
 router.patch('/edit_community/:communityId', upload.single('image'), editCommunity); //edit community
+router.get('/isMember/:communityId/:userId', isUserMember); //is user member
 
 //ACCOUNT PAGE ROUTES
 router.get('/profile', authenticateUser, userInfo) //user profile
