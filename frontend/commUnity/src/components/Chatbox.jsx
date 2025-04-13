@@ -8,48 +8,43 @@ import MessageBox from "./MessageBox";
 const ChatUI = () => {
   const { id } = useParams();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  // const [message, setMessage] = useState("");
   const [community, setCommunity] = useState(null);
 
-  // Fetch community data
   useEffect(() => {
     const fetchCommunity = async () => {
       try {
         const response = await axios.get(`${backendUrl}/users/explore/${id}`);
-
-        if (response.data) {
-          setCommunity(response.data);
-        }
+        if (response.data) setCommunity(response.data);
       } catch (error) {
         console.error("Error fetching community", error);
         toast.error("Error fetching community details");
       }
     };
 
-    if (id) {
-      fetchCommunity();
-    }
+    if (id) fetchCommunity();
   }, [id]);
 
   return (
-    <div className="flex h-[80vh] bg-gray-50 font-sans">
+    <div className="flex flex-col md:flex-row h-screen md:h-[80vh] bg-gray-50 font-sans p-4 gap-4">
       <Toaster />
+
       {/* Members List */}
-      <div className="w-1/3 bg-white p-6 rounded-lg shadow-lg ml-6 overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-4 text-primaryBlue">Members</h2>
+      <div className="w-full md:w-1/3 bg-white p-4 md:p-6 rounded-lg shadow-lg overflow-y-auto max-h-72 md:max-h-full">
+        <h2 className="text-lg md:text-xl font-semibold mb-4 text-primaryBlue">Members</h2>
         <ul className="space-y-4">
           {community?.members?.map((member, index) => (
             <li key={index} className="flex items-center justify-between">
               <span className="text-gray-700">{member.username}</span>
               {member.online && (
-                <FaCheckCircle className="text-primaryGreen w-5 h-5" />
+                <FaCheckCircle className="text-primaryGreen w-4 h-4 md:w-5 md:h-5" />
               )}
             </li>
           ))}
         </ul>
       </div>
 
-      <div>
+      {/* Message Box */}
+      <div className="w-full md:flex-1">
         <MessageBox />
       </div>
     </div>

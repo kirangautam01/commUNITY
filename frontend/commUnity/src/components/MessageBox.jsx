@@ -11,6 +11,8 @@ const MessageBox = () => {
   const [messages, setMessages] = useState([]);
   const bottomRef = useRef();
 
+  const currentUser = localStorage.getItem("userName");
+
   useEffect(() => {
     socket.emit('join-room', communityId);
 
@@ -24,13 +26,16 @@ const MessageBox = () => {
   }, [communityId]);
 
   const sendMessage = () => {
-    if (message.trim()) {
-      socket.emit('send-message', {
+    if (message.trim() && currentUser) {
+      const newMessage = {
         communityId,
         message,
-        sender: 'You', // Replace with actual user later
-      });
-      setMessages((prev) => [...prev, { message, sender: 'You' }]);
+        sender: currentUser.username, // ✅ Use actual username
+      };
+
+      socket.emit('send-message', newMessage);
+
+      setMessages((prev) => [...prev, { ...newMessage }]);
       setMessage('');
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -40,8 +45,18 @@ const MessageBox = () => {
     <div className="h-full flex flex-col p-4">
       <div className="flex-1 overflow-y-auto space-y-2">
         {messages.map((msg, index) => (
-          <div key={index} className="bg-gray-200 p-2 rounded-md">
-            <strong>{msg.sender}:</strong> {msg.message}
+          <div
+            key={index}
+            className={`p-2 rounded-md max-w-[75%] ${
+              msg.sender === currentUser?.username
+                ? 'bg-blue-100 self-end text-right'
+                : 'bg-gray-200 self-start text-left'
+            }`}
+          >
+            <strong>
+              {msg.sender === currentUser?.username ? 'You' : msg.sender}:
+            </strong>{' '}
+            {msg.message}
           </div>
         ))}
         <div ref={bottomRef}></div>
