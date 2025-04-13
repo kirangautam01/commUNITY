@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
-const socket = io('http://localhost:4000');
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const socket = io(backendUrl);
 
 const MessageBox = () => {
   const { id: communityId } = useParams();
