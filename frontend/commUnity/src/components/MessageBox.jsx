@@ -13,6 +13,7 @@ const MessageBox = () => {
 
   const currentUser = localStorage.getItem("userName");
 
+  // Join room and receive messages
   useEffect(() => {
     socket.emit('join-room', communityId);
 
@@ -32,40 +33,42 @@ const MessageBox = () => {
         message,
         sender: currentUser,
       };
-  
+
       socket.emit('send-message', newMessage);
       setMessage('');
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  
 
   return (
     <div className="h-full flex flex-col p-4">
-      <div className="flex-1 overflow-y-auto space-y-2">
+      {/* Scrollable message area */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-2 pr-2">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-md max-w-[75%] ${
-              msg.sender === currentUser?.username
+            className={`p-2 rounded-md max-w-[75%] break-words ${
+              msg.sender === currentUser
                 ? 'bg-blue-100 self-end text-right'
                 : 'bg-gray-200 self-start text-left'
             }`}
           >
             <strong>
-              {msg.sender === currentUser? 'You' : msg.sender}:
-            </strong>{' '}
+              {msg.sender === currentUser ? 'You' : msg.sender}:
+            </strong>
             {msg.message}
           </div>
         ))}
         <div ref={bottomRef}></div>
       </div>
+
+      {/* Input and send button */}
       <div className="flex gap-2 mt-4 flex-col sm:flex-row">
         <input
           className="flex-1 border px-4 py-2 rounded"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+          placeholder="Type your message..."
         />
         <button
           onClick={sendMessage}
