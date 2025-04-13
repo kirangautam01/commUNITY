@@ -30,7 +30,7 @@ const MessageBox = () => {
       const newMessage = {
         communityId,
         message,
-        sender: currentUser.username, // ✅ Use actual username
+        sender: currentUser, // ✅ Use actual username
       };
 
       socket.emit('send-message', newMessage);
@@ -54,7 +54,7 @@ const MessageBox = () => {
             }`}
           >
             <strong>
-              {msg.sender === currentUser?.username ? 'You' : msg.sender}:
+              {msg.sender === currentUser? 'You' : msg.sender}:
             </strong>{' '}
             {msg.message}
           </div>
