@@ -43,14 +43,18 @@ function NoticeComm(props) {
   //   -------------------------------------------------------------------------------- fetch notice
   useEffect(() => {
     const fetchNotices = async () => {
+      setLoading(true);
+      setNotices([]); // Clear previous notices when switching community
+
       try {
         const response = await axios.get(
           `${backendUrl}/users/get_notice/${props.communityId}`
         );
-        setNotices(response.data.notices);
+        setNotices(response.data.notices || []);
       } catch (err) {
         console.error("Error fetching notices:", err);
         toast.error("Failed to load notices.");
+        setNotices([]); // Also clear notices on error
       } finally {
         setLoading(false);
       }

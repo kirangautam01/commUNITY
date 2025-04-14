@@ -14,7 +14,7 @@ function Notice() {
     const fetchCommunities = async () => {
       try {
         const res = await axios.get(
-          `${backendUrl}/users/joined_communities`,
+          `${backendUrl}/users/associated_communities`,
           { withCredentials: true }
         );
         setCommunities(res.data || []);
@@ -27,7 +27,10 @@ function Notice() {
   }, []);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
-  const onSelectCommunity = (community) => setSelectedCommunity(community);
+  const onSelectCommunity = (community) => {
+    setSelectedCommunity(community);
+    setIsOpen(false);
+  };
 
   return (
     <div className="flex font-primary h-screen overflow-hidden">
@@ -86,16 +89,19 @@ function Notice() {
           <NoticeComm communityId={selectedCommunity._id} />
         ) : (
           <div className="text-center max-w-md mx-auto mt-40">
-          <img
-            src="/images/login_side.png" 
-            alt="Select a community"
-            className="w-64 h-64 mx-auto mb-4"
-          />
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">No Community Selected</h2>
-          <p className="text-gray-500">
-            Please select a community from the sidebar to view its latest notices and updates.
-          </p>
-        </div>
+            <img
+              src="/images/login_side.png"
+              alt="Select a community"
+              className="w-64 h-64 mx-auto mb-4"
+            />
+            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+              No Community Selected
+            </h2>
+            <p className="text-gray-500">
+              Please select a community from the sidebar to view its latest
+              notices and updates.
+            </p>
+          </div>
         )}
       </div>
     </div>

@@ -24,28 +24,40 @@ const ChatUI = () => {
     if (id) fetchCommunity();
   }, [id]);
 
-  return (
-    <div className="flex flex-col md:flex-row h-screen md:h-[80vh] bg-gray-50 p-4 gap-4 font-primary">
-      <Toaster />
-
-      {/* Members List */}
-      <div className="w-full md:w-1/3 bg-white p-4 md:p-6 rounded-lg shadow-lg overflow-y-auto max-h-72 md:max-h-full">
-        <h2 className="text-lg md:text-xl font-semibold mb-4 text-primaryBlue">Members</h2>
-        <ul className="space-y-4">
-          {community?.members?.map((member, index) => (
-            <li key={index} className="flex items-center justify-between">
-              <span className="text-gray-700">{member.username}</span>
-              {member.online && (
-                <FaCheckCircle className="text-primaryGreen w-4 h-4 md:w-5 md:h-5" />
-              )}
-            </li>
-          ))}
-        </ul>
+  if (!community) {
+    return (
+      <div className="flex justify-center items-center">
+        <p>Loading community details...</p>
       </div>
+    );
+  }
 
-      {/* Message Box */}
-      <div className="w-full md:flex-1">
-        <MessageBox />
+  return (
+    <div className="font-primary">
+      <h1 className="text-center text-2xl uppercase font-bold">{community.name}</h1>
+      <div className="flex flex-col md:flex-row h-screen md:h-[80vh] bg-gray-50 p-4 gap-4">
+        <Toaster />
+        {/* Members List */}
+        <div className="w-full md:w-1/3 bg-white p-4 md:p-6 rounded-lg shadow-lg overflow-y-auto max-h-72 md:max-h-full">
+          <h2 className="text-lg md:text-xl font-semibold mb-4 text-primaryBlue">
+            Members
+          </h2>
+          <ul className="space-y-4">
+            {community?.members?.map((member, index) => (
+              <li key={index} className="flex items-center justify-between">
+                <span className="text-gray-700">{member.username}</span>
+                {member.online && (
+                  <FaCheckCircle className="text-primaryGreen w-4 h-4 md:w-5 md:h-5" />
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Message Box */}
+        <div className="w-full md:flex-1">
+          <MessageBox />
+        </div>
       </div>
     </div>
   );
