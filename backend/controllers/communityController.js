@@ -372,26 +372,64 @@ const editCommunity = async (req, res) => {
 // ----------------------------------------------------------------------------------------------------- CHECK USER IS_MEMBER
 const isUserMember = async (req, res) => {
     const { communityId, userId } = req.params;
-  
-    if (!communityId || !userId) {
-      return res.status(400).json({ message: "Community ID and User ID are required." });
-    }
-  
-    try {
-      const community = await Community.findById(communityId);
-  
-      if (!community) {
-        return res.status(404).json({ message: "Community not found." });
-      }
-  
-      const isMember = community.members.includes(userId);
-  
-      res.status(200).json({ isMember });
-    } catch (error) {
-      console.error("Error checking membership:", error);
-      res.status(500).json({ message: "Internal server error." });
-    }
-  };
-  
 
-module.exports = { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember };
+    if (!communityId || !userId) {
+        return res.status(400).json({ message: "Community ID and User ID are required." });
+    }
+
+    try {
+        const community = await Community.findById(communityId);
+
+        if (!community) {
+            return res.status(404).json({ message: "Community not found." });
+        }
+
+        const isMember = community.members.includes(userId);
+
+        res.status(200).json({ isMember });
+    } catch (error) {
+        console.error("Error checking membership:", error);
+        res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+// -------------------------------------------------------------------------------- FETCH ALL JOINED AND CREATED COMMUNITIES
+const getAllCommunities = async (req, res) => {
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(401).json({ message: "Unauthorized. Please relogin" });
+    }
+
+    try {
+        // Find communities where the user is in the members array but not the creator
+        const communities = await Community.find({
+            members: userId
+        });
+
+        if (communities.length === 0) {
+            return res.status(404).json({ message: "You have not joined any communities yet." });
+        }
+
+        res.status(200).json(communities);
+    } catch (error) {
+        console.error("Error fetching communities: ", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+module.exports = {
+    createCommunity,
+    joinCommunity,
+    getCommunitiesByCreater,
+    getCommunitiesByMember,
+    exploreCommunity,
+    top10Communities,
+    leaveCommunity,
+    searchCommunity,
+    filterCommunity,
+    delCommunity,
+    editCommunity,
+    isUserMember,
+    getAllCommunities
+};

@@ -3,9 +3,16 @@ const router = express.Router();
 const { createUser, userInfo, pictureChange } = require('../controllers/userController');
 const upload = require('../config/multerConfig')
 const { sentOtp, otpVerify, loginUser, logout } = require('../controllers/authController')
-const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember } = require('../controllers/communityController');
+const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember, getAllCommunities } = require('../controllers/communityController');
 const authenticateUser = require('../middleware/myMiddleware');
 const notice = require('../controllers/noticeController');
+const {
+    createEvent,
+    getAllEvents,
+    getEventsByCommunity,
+    toggleLikeDislike,
+    deleteEvent
+} = require('../controllers/eventController');
 
 //AUTH ROUTES
 router.post('/otp_sent', sentOtp);  //send otp
@@ -31,6 +38,7 @@ router.delete('/del_community', delCommunity); //delete community
 router.delete('/del_mem', leaveCommunity); //delete member of community
 router.patch('/edit_community/:communityId', upload.single('image'), editCommunity); //edit community
 router.get('/isMember/:communityId/:userId', isUserMember); //is user member
+router.get('/associated_communities', authenticateUser, getAllCommunities); //fetch all joined and created communities
 
 //ACCOUNT PAGE ROUTES
 router.get('/profile', authenticateUser, userInfo) //user profile
@@ -39,5 +47,9 @@ router.get('/profile', authenticateUser, userInfo) //user profile
 router.post('/create_notice', authenticateUser, notice.createNotice); //create notice
 router.get('/get_notice/:communityId', notice.getNoticesByCommunity); //fetch notice by community
 router.delete('/del_notice', authenticateUser, notice.deleteNotice); //delete notice
+
+//EVENTS PAGE ROUTES
+router.post('/create_event', upload.single('image'), createEvent);  //create event
+router.get('/get_events', getAllEvents); //display all events
 
 module.exports = router;
