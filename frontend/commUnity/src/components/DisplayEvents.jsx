@@ -9,14 +9,13 @@ import {
 
 const DisplayEventsTimeline = () => {
   const [events, setEvents] = useState([]);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Fetch events from the backend API
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/users/get_events"
-        ); // Adjust URL if necessary
+        const response = await axios.get(`${backendUrl}/users/get_events`);
         if (response.data.success) {
           setEvents(response.data.events);
         }
