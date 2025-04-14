@@ -11,7 +11,8 @@ const {
     getAllEvents,
     getEventsByCommunity,
     toggleLikeDislike,
-    deleteEvent
+    deleteEvent,
+    getUserEvents
 } = require('../controllers/eventController');
 
 //AUTH ROUTES
@@ -51,5 +52,6 @@ router.delete('/del_notice', authenticateUser, notice.deleteNotice); //delete no
 //EVENTS PAGE ROUTES
 router.post('/create_event', upload.single('image'), createEvent);  //create event
 router.get('/get_events', getAllEvents); //display all events
+router.get('/user_events', authenticateUser,getUserEvents); //display events of only user joined communities
 
 module.exports = router;

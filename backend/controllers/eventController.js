@@ -1,4 +1,5 @@
 const EventModel = require('../models/eventsModel');
+const Community= require('../models/communityModel');
 
 // Create a new event
 const createEvent = async (req, res) => {
@@ -26,7 +27,7 @@ const createEvent = async (req, res) => {
 };
 
 
-// Get all events
+// -------------------------------------------------------------------------------- FETCH ALL EVENTS
 const getAllEvents = async (req, res) => {
   try {
     const events = await EventModel.find()
@@ -40,6 +41,28 @@ const getAllEvents = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to fetch events' });
   }
 };
+
+// -------------------------------------------------------------------------------- FETCH EVENTS OF JOINED COMMUNITIES
+const getUserEvents = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Step 1: Find communities where the user is a member
+    const joinedCommunities = await Community.find({ members: userId }).select('_id');
+    const communityIds = joinedCommunities.map(comm => comm._id);
+
+    // Step 2: Get events from these communities
+    const events = await EventModel.find({ communityId: { $in: communityIds } })
+      .populate('author', 'username profilePic')
+      .populate('communityId', 'name')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, events });
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch events' });
+  }
+}
 
 // Get events by community
 const getEventsByCommunity = async (req, res) => {
@@ -108,6 +131,7 @@ const deleteEvent = async (req, res) => {
 module.exports = {
   createEvent,
   getAllEvents,
+  getUserEvents,
   getEventsByCommunity,
   toggleLikeDislike,
   deleteEvent

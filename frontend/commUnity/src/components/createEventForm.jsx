@@ -84,7 +84,7 @@ const CreateEventForm = () => {
   };
 
   return (
-    <div>
+    <div className="mt-10">
       <Toaster />
       <form
         onSubmit={handleSubmit}
@@ -105,6 +105,7 @@ const CreateEventForm = () => {
             value={formData.communityId}
             onChange={handleChange}
             className="text-sm px-3 py-2 border rounded-md bg-gray-100 focus:outline-none w-full md:w-1/3"
+            required
           >
             <option value="">Select Community</option>
             {joinedCommunities.map((com) => (

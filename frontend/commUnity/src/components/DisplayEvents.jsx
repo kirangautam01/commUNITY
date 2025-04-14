@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Ensure you have axios installed
-
+import axios from "axios";
 import {
   FaRegThumbsUp,
   FaRegThumbsDown,
@@ -12,10 +11,11 @@ const DisplayEventsTimeline = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    // Fetch events from the backend API
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/users/get_events`);
+        const response = await axios.get(`${backendUrl}/users/user_events`, {
+          withCredentials: true,
+        });
         if (response.data.success) {
           setEvents(response.data.events);
         }
