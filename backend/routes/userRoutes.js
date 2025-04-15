@@ -8,11 +8,8 @@ const authenticateUser = require('../middleware/myMiddleware');
 const notice = require('../controllers/noticeController');
 const {
     createEvent,
-    getAllEvents,
-    getEventsByCommunity,
+    getUserEvents,
     toggleLikeDislike,
-    deleteEvent,
-    getUserEvents
 } = require('../controllers/eventController');
 
 //AUTH ROUTES
@@ -51,7 +48,7 @@ router.delete('/del_notice', authenticateUser, notice.deleteNotice); //delete no
 
 //EVENTS PAGE ROUTES
 router.post('/create_event', upload.single('image'), createEvent);  //create event
-router.get('/get_events', getAllEvents); //display all events
-router.get('/user_events', authenticateUser,getUserEvents); //display events of only user joined communities
+router.get('/user_events', authenticateUser, getUserEvents); //display events of only user joined communities
+router.put('/toggle_reaction/:eventId', toggleLikeDislike); //toggle like and dislike
 
 module.exports = router;

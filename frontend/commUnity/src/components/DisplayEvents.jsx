@@ -10,6 +10,7 @@ const DisplayEventsTimeline = () => {
   const [events, setEvents] = useState([]);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  // ---------------------------------------------------------------------------------------- FETCH EVENTS BY JOINED COMMUNITIES
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -27,6 +28,31 @@ const DisplayEventsTimeline = () => {
     fetchEvents();
   }, []);
 
+  // ---------------------------------------------------------------------------------------- HANDLE LIKE AND DISLIKE
+  const handleReaction = async (eventId, action) => {
+    const CURRENT_USER_ID = localStorage.getItem("userId");
+    try {
+      const response = await axios.put(
+        `${backendUrl}/users/toggle_reaction/${eventId}`,
+        {
+          userId: CURRENT_USER_ID,
+          action: action,
+        },
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        setEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event._id === eventId ? response.data.event : event
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating reaction:", error);
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4 bg-gray-100 h-auto my-10 rounded-xl">
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
@@ -43,7 +69,7 @@ const DisplayEventsTimeline = () => {
             key={event._id}
             className="bg-white rounded-xl shadow-sm mb-6 overflow-hidden"
           >
-            {/* Header */}
+            {/* ************************************************************************************ HEADER */}
             <div className="flex items-center justify-between p-4 border-b">
               <div>
                 <p className="text-sm font-medium text-gray-800">
@@ -62,8 +88,9 @@ const DisplayEventsTimeline = () => {
               )}
             </div>
 
-            {/* Body */}
+            {/* ************************************************************************************ BODY */}
             <div className="p-4">
+              <p>{event.name}</p>
               <p className="text-xs text-gray-500">
                 {new Date(event.createdAt).toLocaleDateString("en-US", {
                   month: "long",
@@ -80,13 +107,21 @@ const DisplayEventsTimeline = () => {
               )}
             </div>
 
-            {/* Footer */}
+            {/* ************************************************************************************ FOOTER */}
+
             <div className="flex items-center justify-around px-4 py-3 border-t text-gray-600 text-sm">
-              <button className="flex items-center gap-1 hover:text-blue-600 transition">
-                <FaRegThumbsUp /> Like
+              <button
+                className="flex items-center gap-1 hover:text-blue-600 transition"
+                onClick={() => handleReaction(event._id, "like")}
+              >
+                <FaRegThumbsUp />
+                {event.likes?.length || 0}
               </button>
-              <button className="flex items-center gap-1 hover:text-red-500 transition">
-                <FaRegThumbsDown /> Dislike
+              <button
+                className="flex items-center gap-1 hover:text-red-500 transition"
+                onClick={() => handleReaction(event._id, "dislike")}
+              >
+                <FaRegThumbsDown /> {event.dislikes?.length || 0}
               </button>
               <button className="flex items-center gap-1 hover:text-blue-600 transition">
                 <FaRegCommentDots /> Comment

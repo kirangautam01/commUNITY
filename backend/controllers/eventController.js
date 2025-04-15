@@ -1,5 +1,5 @@
 const EventModel = require('../models/eventsModel');
-const Community= require('../models/communityModel');
+const Community = require('../models/communityModel');
 
 // Create a new event
 const createEvent = async (req, res) => {
@@ -64,30 +64,17 @@ const getUserEvents = async (req, res) => {
   }
 }
 
-// Get events by community
-const getEventsByCommunity = async (req, res) => {
-  try {
-    const { communityId } = req.params;
 
-    const events = await EventModel.find({ communityId })
-      .populate('author', 'username profile')
-      .sort({ createdAt: -1 });
-
-    res.status(200).json({ success: true, events });
-  } catch (error) {
-    console.error('Error fetching community events:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch events' });
-  }
-};
-
-// Like or dislike toggle
+// -------------------------------------------------------------------------------- LIKE OR DISLIKE TOGGLE
 const toggleLikeDislike = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { userId, action } = req.body; // action: 'like' or 'dislike'
+    const { userId, action } = req.body;
 
-    const event = await EventModel.findById(eventId);
-    if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
+    let event = await EventModel.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ success: false, message: 'Event not found' });
+    }
 
     const alreadyLiked = event.likes.includes(userId);
     const alreadyDisliked = event.dislikes.includes(userId);
@@ -109,12 +96,26 @@ const toggleLikeDislike = async (req, res) => {
     }
 
     await event.save();
-    res.status(200).json({ success: true, message: 'Action updated', event });
+
+    // Re-fetch with populated fields for frontend
+    const populatedEvent = await EventModel.findById(eventId)
+      .populate('author', 'username profilePic')
+      .populate('communityId', 'name');
+
+    res.status(200).json({
+      success: true,
+      message: 'Reaction updated successfully',
+      event: populatedEvent,
+    });
   } catch (error) {
     console.error('Error toggling like/dislike:', error);
-    res.status(500).json({ success: false, message: 'Failed to update reaction' });
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update reaction',
+    });
   }
 };
+
 
 // Delete an event
 const deleteEvent = async (req, res) => {
@@ -132,7 +133,6 @@ module.exports = {
   createEvent,
   getAllEvents,
   getUserEvents,
-  getEventsByCommunity,
   toggleLikeDislike,
   deleteEvent
 };

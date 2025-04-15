@@ -12,8 +12,10 @@ function NoticeComm(props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [notices, setNotices] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [noticeToDelete, setNoticeToDelete] = useState(null);
 
-  //   --------------------------------------------------------------------------------create notice
+  // -------------------------------------------------------------------------------- create notice
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,7 +42,7 @@ function NoticeComm(props) {
     }
   };
 
-  //   -------------------------------------------------------------------------------- fetch notice
+  // -------------------------------------------------------------------------------- fetch notice
   useEffect(() => {
     const fetchNotices = async () => {
       setLoading(true);
@@ -67,32 +69,34 @@ function NoticeComm(props) {
     return <p>Loading notices...</p>;
   }
 
-  //   -------------------------------------------------------------------------------- delete notice
-  const handleDelete = async (noticeId) => {
+  // -------------------------------------------------------------------------------- delete notice
+  const handleDelete = async () => {
+    if (!noticeToDelete) return;
+
     try {
-      // Sending data in the request body using the `data` property
       const response = await axios.delete(`${backendUrl}/users/del_notice`, {
         data: {
           communityId: props.communityId,
-          noticeId,
+          noticeId: noticeToDelete._id,
         },
-        withCredentials: true, // This sends cookies if needed for authentication
+        withCredentials: true,
       });
 
       if (response.status === 200) {
-        toast.success("Notice deleted successfully" || response.data.message);
-        // Optionally, update UI after successful deletion (e.g., remove the notice from the list)
+        toast.success("Notice deleted successfully");
+        setNotices(
+          notices.filter((notice) => notice._id !== noticeToDelete._id)
+        );
+        setIsModalOpen(false); // Close the modal after deletion
       }
     } catch (error) {
       console.error("Error deleting notice:", error);
-      // Handle errors and show message to the user
       if (error.response) {
-        // Server responded with a status other than 200 range
         toast.error(error.response.data.message || "An error occurred");
       } else {
-        // No response from the server
         toast.error("Failed to connect to the server.");
       }
+      setIsModalOpen(false); // Close the modal in case of an error
     }
   };
 
@@ -157,7 +161,6 @@ function NoticeComm(props) {
           </div>
 
           {/* Submit Button */}
-
           <button
             type="submit"
             className="w-1/2 mx-auto block py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
@@ -189,7 +192,10 @@ function NoticeComm(props) {
               <p className="text-sm">{notice.body}</p>
               <div
                 className="absolute right-2 bottom-2 transition-all duration-200 ease hover:cursor-pointer hover:scale-150 hover:text-red-600 hover:-rotate-45"
-                onClick={() => handleDelete(notice._id)}
+                onClick={() => {
+                  setNoticeToDelete(notice); // Set notice to delete
+                  setIsModalOpen(true); // Open the modal
+                }}
               >
                 <AiTwotoneDelete />
               </div>
@@ -197,6 +203,30 @@ function NoticeComm(props) {
           ))
         )}
       </div>
+
+      {/* -------------------------------------------------------------------------------- Warning Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/30 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
+            <h3 className="text-xl font-semibold mb-4">Are you sure?</h3>
+            <p className="mb-6">Do you really want to delete this notice?</p>
+            <div className="flex justify-between">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="py-2 px-4 bg-gray-300 rounded-md hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
