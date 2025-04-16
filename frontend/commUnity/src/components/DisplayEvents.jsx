@@ -5,10 +5,20 @@ import {
   FaRegThumbsDown,
   FaRegCommentDots,
 } from "react-icons/fa";
+import { MdOutlineFeed } from "react-icons/md";
+import Comments from "./Comments";
 
 const DisplayEventsTimeline = () => {
   const [events, setEvents] = useState([]);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [visibleComments, setVisibleComments] = useState({});
+
+  const toggleComment = (eventId) => {
+    setVisibleComments((prev) => ({
+      ...prev,
+      [eventId]: !prev[eventId],
+    }));
+  };
 
   // ---------------------------------------------------------------------------------------- FETCH EVENTS BY JOINED COMMUNITIES
   useEffect(() => {
@@ -55,8 +65,8 @@ const DisplayEventsTimeline = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-4 bg-gray-100 h-auto my-10 rounded-xl">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Community Events Feed 📰
+      <h1 className="flex text-3xl font-bold mb-6 justify-center gap-4 text-gray-800">
+        Community Events Feed <MdOutlineFeed />
       </h1>
 
       {events.length === 0 ? (
@@ -72,7 +82,7 @@ const DisplayEventsTimeline = () => {
             {/* ************************************************************************************ HEADER */}
             <div className="flex items-center justify-between p-4 border-b">
               <div>
-                <p className="text-sm font-medium text-gray-800">
+                <p className="text-lg font-bold text-gray-800">
                   {event.author?.username || "Unknown"}
                 </p>
                 <p className="text-xs text-gray-500">
@@ -90,7 +100,7 @@ const DisplayEventsTimeline = () => {
 
             {/* ************************************************************************************ BODY */}
             <div className="p-4">
-              <p>{event.name}</p>
+              <p className="font-bold">{event.name}</p>
               <p className="text-xs text-gray-500">
                 {new Date(event.createdAt).toLocaleDateString("en-US", {
                   month: "long",
@@ -108,7 +118,6 @@ const DisplayEventsTimeline = () => {
             </div>
 
             {/* ************************************************************************************ FOOTER */}
-
             <div className="flex items-center justify-around px-4 py-3 border-t text-gray-600 text-sm">
               <button
                 className="flex items-center gap-1 hover:text-blue-600 transition"
@@ -121,12 +130,22 @@ const DisplayEventsTimeline = () => {
                 className="flex items-center gap-1 hover:text-red-500 transition"
                 onClick={() => handleReaction(event._id, "dislike")}
               >
-                <FaRegThumbsDown /> {event.dislikes?.length || 0}
+                <FaRegThumbsDown />
+                {event.dislikes?.length || 0}
               </button>
-              <button className="flex items-center gap-1 hover:text-blue-600 transition">
+              <button
+                className="flex items-center gap-1 hover:text-blue-600 transition"
+                onClick={() => toggleComment(event._id)}
+              >
                 <FaRegCommentDots /> Comment
               </button>
             </div>
+
+            {visibleComments[event._id] && (
+              <div>
+                <Comments eventId={event._id} />
+              </div>
+            )}
           </div>
         ))
       )}
