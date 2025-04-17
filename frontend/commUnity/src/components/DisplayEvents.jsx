@@ -169,26 +169,46 @@ const DisplayEventsTimeline = () => {
 
             {/* ************************************************************************************ FOOTER */}
             <div className="flex items-center justify-around px-4 py-3 border-t text-gray-600 text-sm">
-              <button
-                className="flex items-center gap-1 hover:text-blue-600 transition"
-                onClick={() => handleReaction(event._id, "like")}
-              >
-                <FaRegThumbsUp />
-                {event.likes?.length || 0}
-              </button>
-              <button
-                className="flex items-center gap-1 hover:text-red-500 transition"
-                onClick={() => handleReaction(event._id, "dislike")}
-              >
-                <FaRegThumbsDown />
-                {event.dislikes?.length || 0}
-              </button>
-              <button
-                className="flex items-center gap-1 hover:text-blue-600 transition"
-                onClick={() => toggleComment(event._id)}
-              >
-                <FaRegCommentDots /> Comment
-              </button>
+              {(() => {
+                const CURRENT_USER_ID = localStorage.getItem("userId");
+                const hasLiked = event.likes?.includes(CURRENT_USER_ID);
+                const hasDisliked = event.dislikes?.includes(CURRENT_USER_ID);
+
+                return (
+                  <>
+                    <button
+                      className={`flex items-center gap-1 transition ${
+                        hasLiked
+                          ? "text-blue-600"
+                          : "text-gray-600 hover:text-blue-600"
+                      }`}
+                      onClick={() => handleReaction(event._id, "like")}
+                    >
+                      <FaRegThumbsUp />
+                      {event.likes?.length || 0}
+                    </button>
+
+                    <button
+                      className={`flex items-center gap-1 transition ${
+                        hasDisliked
+                          ? "text-red-500"
+                          : "text-gray-600 hover:text-red-500"
+                      }`}
+                      onClick={() => handleReaction(event._id, "dislike")}
+                    >
+                      <FaRegThumbsDown />
+                      {event.dislikes?.length || 0}
+                    </button>
+
+                    <button
+                      className="flex items-center gap-1 hover:text-blue-600 transition"
+                      onClick={() => toggleComment(event._id)}
+                    >
+                      <FaRegCommentDots /> Comment
+                    </button>
+                  </>
+                );
+              })()}
             </div>
 
             {visibleComments[event._id] && (

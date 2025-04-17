@@ -54,7 +54,7 @@ function Notice() {
           )}
         </button>
 
-        {/* Sidebar Content */}
+        {/* ************************************************************************  Sidebar Content */}
         <div className="p-4 overflow-y-auto h-full">
           {isOpen && (
             <>
@@ -83,7 +83,7 @@ function Notice() {
         </div>
       </div>
 
-      {/* Notices Section */}
+      {/* ************************************************************************ Notices Section */}
       <div className="flex-1 p-2 overflow-y-auto">
         {selectedCommunity ? (
           <NoticeComm communityId={selectedCommunity._id} />

@@ -114,7 +114,7 @@ function NoticeComm(props) {
         {isExpanded ? "Collapse Form" : "Write a Notice"}
       </button>
 
-      {/* Collapsible Form with Animation */}
+      {/* ************************************************************************ Collapsible Form with Animation */}
       <div
         className={`overflow-hidden transition-all duration-700 ease mx-auto mb-10 block max-w-lg ${
           isExpanded ? "max-h-screen" : "max-h-0"
