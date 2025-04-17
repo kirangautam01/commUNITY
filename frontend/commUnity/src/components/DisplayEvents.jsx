@@ -7,11 +7,14 @@ import {
 } from "react-icons/fa";
 import { MdOutlineFeed } from "react-icons/md";
 import Comments from "./Comments";
+import { FaEllipsisVertical } from "react-icons/fa6";
+import toast, { Toaster } from "react-hot-toast";
 
 const DisplayEventsTimeline = () => {
   const [events, setEvents] = useState([]);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [visibleComments, setVisibleComments] = useState({});
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
   const toggleComment = (eventId) => {
     setVisibleComments((prev) => ({
@@ -63,8 +66,24 @@ const DisplayEventsTimeline = () => {
     }
   };
 
+  // ---------------------------------------------------------------------------------------- HANDLE EVENT DELETE
+  const deleteEvent = async (eventId) => {
+    try {
+      const response = await axios.delete(
+        `${backendUrl}/users/delete_event/${eventId}`
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log("event delete error: ", error);
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-4 bg-gray-100 h-auto my-10 rounded-xl">
+      <Toaster />
       <h1 className="flex text-3xl font-bold mb-6 justify-center gap-4 text-gray-800">
         Community Events Feed <MdOutlineFeed />
       </h1>
@@ -99,14 +118,45 @@ const DisplayEventsTimeline = () => {
             </div>
 
             {/* ************************************************************************************ BODY */}
-            <div className="p-4">
-              <p className="font-bold">{event.name}</p>
-              <p className="text-xs text-gray-500">
-                {new Date(event.createdAt).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
+            <div className="p-4 relative">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-bold">{event.name}</p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(event.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+                <div className="relative">
+                  <FaEllipsisVertical
+                    className="hover:cursor-pointer"
+                    onClick={() =>
+                      setActiveMenuId(
+                        activeMenuId === event._id ? null : event._id
+                      )
+                    }
+                  />
+
+                  {activeMenuId === event._id && (
+                    <div className="absolute right-0 mt-2 w-max bg-primaryRed shadow-lg rounded-md z-10 animate-smallFall overflow-hidden">
+                      <ul>
+                        <li
+                          className="px-4 py-2 text-sm text-white hover:bg-red-800 hover:cursor-pointer"
+                          onClick={() => {
+                            setActiveMenuId(null);
+                            deleteEvent(event._id);
+                          }}
+                        >
+                          Delete
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <p className="text-gray-700 mb-3">{event.body}</p>
               {event.image && (
                 <img

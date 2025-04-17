@@ -10,8 +10,9 @@ const {
     createEvent,
     getUserEvents,
     toggleLikeDislike,
+    deleteEvent,
 } = require('../controllers/eventController');
-const { getCommentsByEventId, createComment } = require('../controllers/commentController');
+const { getCommentsByEventId, createComment, deleteComment } = require('../controllers/commentController');
 
 //AUTH ROUTES
 router.post('/otp_sent', sentOtp);  //send otp
@@ -51,9 +52,11 @@ router.delete('/del_notice', authenticateUser, notice.deleteNotice); //delete no
 router.post('/create_event', upload.single('image'), createEvent);  //create event
 router.get('/user_events', authenticateUser, getUserEvents); //display events of only user joined communities
 router.put('/toggle_reaction/:eventId', toggleLikeDislike); //toggle like and dislike
+router.delete('/delete_event/:eventId', deleteEvent);  //delete event
 
 //COMMENTS PAGE ROUTE
 router.post('/create_comment', createComment); //create comment
 router.get('/get_comments/:eventId', getCommentsByEventId);  // get comments by event id
+router.delete('/delete_comment/:commentId', deleteComment); //delete comment
 
 module.exports = router;

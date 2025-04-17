@@ -26,22 +26,6 @@ const createEvent = async (req, res) => {
   }
 };
 
-
-// -------------------------------------------------------------------------------- FETCH ALL EVENTS
-const getAllEvents = async (req, res) => {
-  try {
-    const events = await EventModel.find()
-      .populate('author', 'username profilePic')
-      .populate('communityId', 'name')
-      .sort({ createdAt: -1 });
-
-    res.status(200).json({ success: true, events });
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    res.status(500).json({ success: false, message: 'Failed to fetch events' });
-  }
-};
-
 // -------------------------------------------------------------------------------- FETCH EVENTS OF JOINED COMMUNITIES
 const getUserEvents = async (req, res) => {
   try {
@@ -131,7 +115,6 @@ const deleteEvent = async (req, res) => {
 
 module.exports = {
   createEvent,
-  getAllEvents,
   getUserEvents,
   toggleLikeDislike,
   deleteEvent
