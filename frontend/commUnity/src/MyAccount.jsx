@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
+import ContactForm from "./components/ContactUs";
 
 function MyAccount() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -95,7 +96,7 @@ function MyAccount() {
         <div className="flex flex-col md:flex-row items-center gap-5 ">
           <div className="relative rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
             <img
-              src={data.user.profilePic}
+              src={data.user.profilePic || "/images/default.png"}
               alt="profile"
               className="w-full h-full object-cover rounded-full"
             />
@@ -128,6 +129,8 @@ function MyAccount() {
           <p>Community joined: {data.user.memberOf.length}</p>
         </div>
       </div>
+
+      <ContactForm />
     </div>
   );
 }

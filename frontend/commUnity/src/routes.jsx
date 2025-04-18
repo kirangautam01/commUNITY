@@ -15,6 +15,7 @@ import SearchCommunity from "./components/SearchCommunity.jsx";
 import EditCommunity from "./components/EditCommunity.jsx";
 import Footer from "./components/Footer.jsx";
 import Chatbox from "./components/Chatbox.jsx";
+import LoadFromTop from "./components/LoadFromTop.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,9 +30,10 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <AuthProvider>
+        <LoadFromTop />
         <Header />
         <Outlet />
-        <Footer/>
+        <Footer />
       </AuthProvider>
     ),
     children: [
@@ -73,7 +75,7 @@ const router = createBrowserRouter([
             element: <Chatbox />,
           },
         ],
-      },      
+      },
     ],
   },
 ]);

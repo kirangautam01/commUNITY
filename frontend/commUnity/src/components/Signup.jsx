@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BiHide, BiShow } from "react-icons/bi";
 
 function Signup() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -16,6 +17,7 @@ function Signup() {
     location: "",
     profilePic: null,
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit1 = async (e) => {
     e.preventDefault();
@@ -190,15 +192,28 @@ function Signup() {
               />
 
               <label>Password: </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="● ● ● ● ● ● ● ●"
-                className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm"
-                required
-              />
+              <div className="border-2 border-blue-500 rounded-2xl p-2 placeholder:text-sm flex items-center">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="● ● ● ● ● ● ● ●"
+                  className="outline-none flex-1 "
+                  required
+                />
+                {showPassword ? (
+                  <BiHide
+                    onClick={() => setShowPassword(false)}
+                    className="hover:cursor-pointer size-5"
+                  />
+                ) : (
+                  <BiShow
+                    onClick={() => setShowPassword(true)}
+                    className="hover:cursor-pointer size-5"
+                  />
+                )}
+              </div>
 
               <label>Location: </label>
               <input
@@ -217,7 +232,6 @@ function Signup() {
                 name="profilePic"
                 onChange={handleFileChange}
                 className="border-2 border-blue-500 rounded-2xl p-2"
-                required
               />
 
               <input
