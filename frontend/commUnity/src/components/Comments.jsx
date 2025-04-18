@@ -10,6 +10,22 @@ function Comments({ eventId }) {
   const [comments, setComments] = useState([]);
   const [activeCommentId, setActiveCommentId] = useState(null);
   const menuRef = useRef();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [commentIdToDelete, setCommentIdToDelete] = useState(null);
+
+  // -------------------------------------------------------------------------------- PREVENT SCROLLING BEHIND
+    useEffect(() => {
+      if (showConfirmModal) {
+        document.body.classList.add("overflow-hidden");
+      } else {
+        document.body.classList.remove("overflow-hidden");
+      }
+  
+      // Clean up on unmount
+      return () => {
+        document.body.classList.remove("overflow-hidden");
+      };
+    }, [showConfirmModal]);
 
   // ------------------------------------------------------- TO DISAPPEAR DELETE MENU IN COMMENT SECTION WHEN CLICKING OUTSIDE
   useEffect(() => {
@@ -84,6 +100,7 @@ function Comments({ eventId }) {
   return (
     <div className="max-w-2xl mx-auto p-4 bg-white rounded-lg shadow">
       <Toaster />
+
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Comments ({comments.length})
       </h2>
@@ -145,7 +162,7 @@ function Comments({ eventId }) {
               {/* Icon + Dropdown */}
               <div className="relative flex items-center h-full">
                 <IoEllipsisHorizontalSharp
-                  className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:cursor-pointer"
+                  className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:cursor-pointer"
                   onClick={() =>
                     setActiveCommentId(
                       activeCommentId === comment._id ? null : comment._id
@@ -162,7 +179,8 @@ function Comments({ eventId }) {
                         className="px-4 py-2 text-sm text-white hover:bg-red-800 hover:text-white cursor-pointer"
                         onClick={() => {
                           setActiveCommentId(null);
-                          deleteComment(comment._id);
+                          setCommentIdToDelete(comment._id);
+                          setShowConfirmModal(true);
                         }}
                       >
                         Delete
@@ -175,6 +193,35 @@ function Comments({ eventId }) {
           ))
         )}
       </div>
+      {showConfirmModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-[rgba(0,0,0,0.5)]">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Are you sure you want to delete this comment?
+            </h3>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setCommentIdToDelete(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+                onClick={() => {
+                  deleteComment(commentIdToDelete);
+                  setShowConfirmModal(false);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

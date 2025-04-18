@@ -15,6 +15,8 @@ const DisplayEventsTimeline = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [visibleComments, setVisibleComments] = useState({});
   const [activeMenuId, setActiveMenuId] = useState(null);
+  const [showEventDeleteModal, setShowEventDeleteModal] = useState(false);
+  const [eventIdToDelete, setEventIdToDelete] = useState(null);
 
   const toggleComment = (eventId) => {
     setVisibleComments((prev) => ({
@@ -22,6 +24,20 @@ const DisplayEventsTimeline = () => {
       [eventId]: !prev[eventId],
     }));
   };
+
+  // -------------------------------------------------------------------------------- PREVENT SCROLLING BEHIND
+  useEffect(() => {
+    if (showEventDeleteModal) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    // Clean up on unmount
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showEventDeleteModal]);
 
   // ---------------------------------------------------------------------------------------- FETCH EVENTS BY JOINED COMMUNITIES
   useEffect(() => {
@@ -146,7 +162,8 @@ const DisplayEventsTimeline = () => {
                           className="px-4 py-2 text-sm text-white hover:bg-red-800 hover:cursor-pointer"
                           onClick={() => {
                             setActiveMenuId(null);
-                            deleteEvent(event._id);
+                            setEventIdToDelete(event._id);
+                            setShowEventDeleteModal(true);
                           }}
                         >
                           Delete
@@ -218,6 +235,38 @@ const DisplayEventsTimeline = () => {
             )}
           </div>
         ))
+      )}
+
+      {/* ******************************************************************************* WANRNING MODAL FOR DELETE EVENT */}
+      {showEventDeleteModal && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 bg-[rgba(0,0,0,0.5)]">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Are you sure you want to delete this event?
+            </h3>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={() => {
+                  setShowEventDeleteModal(false);
+                  setEventIdToDelete(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+                onClick={() => {
+                  deleteEvent(eventIdToDelete);
+                  setShowEventDeleteModal(false);
+                  setEventIdToDelete(null);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

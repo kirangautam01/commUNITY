@@ -40,7 +40,38 @@ function ExploreCommunity() {
     if (item) {
       fetchCommunity(); // Fetch data only if 'item' exists
     }
-  }, [item, message]); // Add message to dependency array
+  }, [item, message]);
+
+  // -------------------------------------------------------------------------------- PREVENT SCROLLING BEHIND
+  useEffect(() => {
+    if (modalToggle) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    // Clean up on unmount
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [modalToggle]);
+
+  // -------------------------------------------------------------------------------- ESC KEY SUPPORT TO CLOSE THE MODAL
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setModalToggle(false);
+      }
+    };
+
+    if (modalToggle) {
+      document.addEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [modalToggle]);
 
   // ------------------------------------------------------------------------------------------------------- TO JOIN COMMUNITY
   const joinCommunity = async () => {

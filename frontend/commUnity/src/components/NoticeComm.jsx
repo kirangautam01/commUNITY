@@ -15,6 +15,38 @@ function NoticeComm(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [noticeToDelete, setNoticeToDelete] = useState(null);
 
+
+  // -------------------------------------------------------------------------------- PREVENT SCROLLING BEHIND
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    // Clean up on unmount
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isModalOpen]);
+
+  // -------------------------------------------------------------------------------- ESC KEY SUPPORT TO CLOSE THE MODAL
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+      }
+    };
+  
+    if (isModalOpen) {
+      document.addEventListener("keydown", handleEsc);
+    }
+  
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [isModalOpen]);
+
   // -------------------------------------------------------------------------------- create notice
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -206,11 +238,15 @@ function NoticeComm(props) {
 
       {/* -------------------------------------------------------------------------------- Warning Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/30 z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h3 className="text-xl font-semibold mb-4">Are you sure?</h3>
-            <p className="mb-6">Do you really want to delete this notice?</p>
-            <div className="flex justify-between">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/30 z-50 px-4">
+          <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full sm:w-2/3 md:w-1/2 lg:w-1/3 max-w-lg">
+            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">
+              Are you sure?
+            </h3>
+            <p className="mb-4 sm:mb-6">
+              Do you really want to delete this notice?
+            </p>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-0">
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="py-2 px-4 bg-gray-300 rounded-md hover:bg-gray-400"
