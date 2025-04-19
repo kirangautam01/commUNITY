@@ -79,7 +79,7 @@ function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   Home
@@ -87,19 +87,37 @@ function Footer() {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/events"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  Features
+                  Events
                 </a>
               </li>
               
               <li>
                 <a
-                  href="#"
+                  href="/notice"
                   className="text-gray-400 hover:text-white transition-colors"
                 >
-                  About Us
+                  Notice Board
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/community"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Communities
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/account"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  My Profile
                 </a>
               </li>
               
