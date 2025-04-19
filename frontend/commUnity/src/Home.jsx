@@ -60,7 +60,7 @@ function Home() {
           </div>
         </div>
 
-        {/* Features Section - Modernized */}
+        {/* ************************************************************************************ FEATURES */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -88,7 +88,7 @@ function Home() {
                 customizable settings and branding options.
               </p>
               <a
-                href="#"
+                href="/community"
                 className="flex items-center text-blue-600 font-medium"
               >
                 Learn more <FaArrowRight className="ml-2" />
@@ -110,7 +110,7 @@ function Home() {
                 calendars, and automated reminders.
               </p>
               <a
-                href="#"
+                href="/events"
                 className="flex items-center text-blue-600 font-medium"
               >
                 Learn more <FaArrowRight className="ml-2" />
@@ -124,7 +124,7 @@ function Home() {
                   <FaBell className="text-blue-600 text-2xl" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900">
-                  Smart Notifications
+                  Notice Management
                 </h3>
               </div>
               <p className="text-gray-600 mb-6">
@@ -132,7 +132,7 @@ function Home() {
                 to ensure important messages are seen.
               </p>
               <a
-                href="#"
+                href="/notice"
                 className="flex items-center text-blue-600 font-medium"
               >
                 Learn more <FaArrowRight className="ml-2" />
@@ -141,7 +141,7 @@ function Home() {
           </div>
         </div>
 
-        {/* Communication Section - Modernized */}
+        {/* ************************************************************************************ CHAT PREVIEW */}
 
         <div className="bg-white text-gray-800 py-20 transition-all duration-300 ease-in-out">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -152,74 +152,50 @@ function Home() {
                   Real-time Communication
                 </h2>
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Stay connected with your community using our secure,
-                  end-to-end encrypted chat. Whether it's a group update or
-                  private conversation, our chat makes it effortless.
+                  While messages are not stored and will reset upon refresh,
+                  this lightweight system keeps your conversations fast and
+                  direct. We’re actively working on adding secure message
+                  storage and end-to-end encryption to improve your experience —
+                  updates will be rolled out gradually to enhance user
+                  efficiency and privacy.
                 </p>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                  <a
-                    href="#"
-                    className="px-6 py-3 bg-primaryRed text-white font-medium rounded-xl shadow-md hover:bg-red-600 hover:scale-105 transition-all duration-300"
-                  >
-                    Try Chat Now
-                  </a>
-                  <a
-                    href="#"
-                    className="px-6 py-3 border border-primaryBlue text-primaryBlue font-medium rounded-xl hover:bg-primaryBlue hover:text-white transition-all duration-300"
-                  >
-                    See Features
-                  </a>
-                </div>
               </div>
 
-              {/* Chat Preview */}
               <div className="lg:w-1/2 lg:pl-12">
-                <div className="bg-gray-100 p-6 rounded-2xl shadow-lg border border-gray-200 transition-all duration-300">
-                  <div className="flex items-center mb-6">
-                    <div className="p-3 bg-primaryBlue rounded-full mr-4 animate-pulse">
-                      <FaComments className="text-white text-lg" />
-                    </div>
-                    <h3 className="text-2xl font-semibold text-gray-800">
-                      Community Chat Preview
-                    </h3>
-                  </div>
+                <img
+                  src="/images/chatPreview.png"
+                  alt="chat_preview"
+                  className="rounded-2xl shadow-xl border border-gray-200 transition-transform duration-300 hover:scale-105 object-cover max-h-100"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-                  <div className="space-y-4">
-                    {/* Message 1 */}
-                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-primaryBlue">
-                      <div className="flex items-start">
-                        <div className="bg-primaryBlue w-10 h-10 rounded-full mr-3 flex items-center justify-center text-white font-bold">
-                          A
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            Alex Johnson
-                          </p>
-                          <p className="text-gray-600">
-                            Has everyone seen the new event schedule?
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+        {/* ************************************************************************************ NOTICE PREVIEW */}
+        <div className="py-20 mt-10 w-screen">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-gray-800">
+            <div className="lg:flex lg:items-center lg:justify-between lg:flex-row-reverse md:gap-10">
+              <div className="lg:w-1/2 mb-12 lg:mb-0">
+                <h2 className="text-4xl font-extrabold mb-6 text-primaryBlue transition duration-300">
+                  Community Notices & Announcements
+                </h2>
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                  Keep your community informed with timely updates and
+                  announcements. Whether it's future plans, important decisions,
+                  or reminders, the Notice tab lets you share it all in one
+                  place. Clear and centralized notices help every member stay in
+                  sync and actively participate in your community’s progress.
+                </p>
+              </div>
 
-                    {/* Message 2 */}
-                    <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-primaryBlue ml-8">
-                      <div className="flex items-start">
-                        <div className="bg-primaryBlue w-10 h-10 rounded-full mr-3 flex items-center justify-center text-white font-bold">
-                          S
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            Sarah Miller
-                          </p>
-                          <p className="text-gray-600">
-                            Yes! The workshop on Saturday looks great!
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              {/* Image Preview (Left Side) */}
+              <div className="lg:w-1/2 lg:pr-12">
+                <img
+                  src="/images/noticePreview.png"
+                  alt="notice_preview"
+                  className="rounded-2xl shadow-xl transition-transform duration-300 hover:scale-105"
+                />
               </div>
             </div>
           </div>

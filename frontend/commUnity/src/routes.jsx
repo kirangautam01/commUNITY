@@ -16,6 +16,7 @@ import EditCommunity from "./components/EditCommunity.jsx";
 import Footer from "./components/Footer.jsx";
 import Chatbox from "./components/Chatbox.jsx";
 import LoadFromTop from "./components/LoadFromTop.jsx";
+import CommunityGuides from "./components/CommunityGuides.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/guides",
+    element: <CommunityGuides />,
   },
   {
     path: "/",
@@ -62,12 +67,12 @@ const router = createBrowserRouter([
         children: [{ path: "", element: <Notice /> }],
       },
       {
-        path: "/account",
+        path: "account",
         element: <ProtectedRoute />, // Protect MyAccount
         children: [{ path: "", element: <MyAccount /> }],
       },
       {
-        path: "/chatbox",
+        path: "chatbox",
         element: <ProtectedRoute />,
         children: [
           {
