@@ -29,7 +29,7 @@ const ChatUI = () => {
   }, [id]);
 
   useEffect(() => {
-    // Listen for online status updates
+    // Listen for live user status changes
     socket.on("update-user-status", ({ userId, isOnline }) => {
       setOnlineUsers((prev) => ({
         ...prev,
@@ -37,8 +37,18 @@ const ChatUI = () => {
       }));
     });
 
+    // Listen for initial online users list when this user connects
+    socket.on("online-users-list", (userList) => {
+      const onlineMap = {};
+      userList.forEach((user) => {
+        onlineMap[user._id] = true;
+      });
+      setOnlineUsers(onlineMap);
+    });
+
     return () => {
       socket.off("update-user-status");
+      socket.off("online-users-list");
     };
   }, []);
 
@@ -69,7 +79,7 @@ const ChatUI = () => {
                 <span className="text-gray-700 flex items-center gap-2">
                   {member.username}
                   {onlineUsers[member._id] && (
-                    <FaCircle className="text-green-500" title="Online" /> 
+                    <FaCircle className="text-green-500" title="Online" />
                   )}
                 </span>
               </li>
