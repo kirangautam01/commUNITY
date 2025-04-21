@@ -24,7 +24,11 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Community' // References the Community model
         }
-    ]
+    ],
+    isOnline: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
