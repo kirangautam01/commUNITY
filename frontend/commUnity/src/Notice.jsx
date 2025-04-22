@@ -5,7 +5,7 @@ import NoticeComm from "./components/NoticeComm";
 
 function Notice() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [communities, setCommunities] = useState([]);
 
