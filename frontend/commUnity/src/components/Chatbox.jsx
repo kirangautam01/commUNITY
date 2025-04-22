@@ -18,12 +18,20 @@ const ChatUI = () => {
         });
         if (response.data) setCommunity(response.data);
       } catch (error) {
-        console.error("Error fetching community", error);
         toast.error("Error fetching community details");
       }
     };
 
-    if (id) fetchCommunity();
+    if (id) {
+      fetchCommunity();
+
+      // Fetch again after 1 second to get updated isOnline
+      const timeout = setTimeout(() => {
+        fetchCommunity();
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
   }, [id]);
 
   if (!community) {

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
-import ContactForm from "./components/ContactUs";
+// import ContactForm from "./components/ContactUs";
 
 function MyAccount() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -130,7 +130,7 @@ function MyAccount() {
         </div>
       </div>
 
-      <ContactForm />
+      {/* <ContactForm /> */}
     </div>
   );
 }
