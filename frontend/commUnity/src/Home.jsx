@@ -163,7 +163,7 @@ function Home() {
 
               <div className="lg:w-1/2 lg:pl-12">
                 <img
-                  src="/images/chatPreview.png"
+                  src="/images/chatPreview2.png"
                   alt="chat_preview"
                   className="rounded-2xl shadow-xl border border-gray-200 transition-transform duration-300 hover:scale-105 object-cover max-h-100"
                 />
