@@ -110,7 +110,7 @@ const exploreCommunity = async (req, res) => {
 
         const community = await Community.findById(communityId)
             .populate("creater", "username location profilePic")
-            .populate("members", "username location profilePic")
+            .populate("members", "username location profilePic isOnline")
             .exec();
 
         if (!community) {

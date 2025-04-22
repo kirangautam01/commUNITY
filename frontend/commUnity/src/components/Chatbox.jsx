@@ -4,13 +4,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import MessageBox from "./MessageBox";
-import socket from "./socket";
 
 const ChatUI = () => {
   const { id } = useParams();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [community, setCommunity] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState({});
 
   useEffect(() => {
     const fetchCommunity = async () => {
@@ -27,30 +25,6 @@ const ChatUI = () => {
 
     if (id) fetchCommunity();
   }, [id]);
-
-  useEffect(() => {
-    // Listen for live user status changes
-    socket.on("update-user-status", ({ userId, isOnline }) => {
-      setOnlineUsers((prev) => ({
-        ...prev,
-        [userId]: isOnline,
-      }));
-    });
-
-    // Listen for initial online users list when this user connects
-    socket.on("online-users-list", (userList) => {
-      const onlineMap = {};
-      userList.forEach((user) => {
-        onlineMap[user._id] = true;
-      });
-      setOnlineUsers(onlineMap);
-    });
-
-    return () => {
-      socket.off("update-user-status");
-      socket.off("online-users-list");
-    };
-  }, []);
 
   if (!community) {
     return (
@@ -78,8 +52,11 @@ const ChatUI = () => {
               <li key={index} className="flex items-center justify-between">
                 <span className="text-gray-700 flex items-center gap-2">
                   {member.username}
-                  {onlineUsers[member._id] && (
-                    <FaCircle className="text-green-500" title="Online" />
+                  {member.isOnline && (
+                    <FaCircle
+                      className="text-green-500"
+                      title="Online (offline test)"
+                    />
                   )}
                 </span>
               </li>

@@ -1,27 +1,37 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import socket from './socket';
+import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+import socket from "./socket";
 
 const MessageBox = () => {
   const { id: communityId } = useParams();
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const bottomRef = useRef();
-
   const currentUser = localStorage.getItem("userName");
+  const userId = localStorage.getItem("userId");
 
   // Join room and receive messages
   useEffect(() => {
-    socket.emit('join-room', communityId);
-
-    socket.on('receive-message', (data) => {
+    if (userId) {
+      console.log("Connecting user with ID:", userId);
+      socket.connect(); // ✅ only needed if socket is not auto-connecting
+      socket.emit("user-connected", userId);
+    }
+  
+    socket.emit("join-room", communityId);
+  
+    socket.on("receive-message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
-
+  
     return () => {
-      socket.off('receive-message');
+      socket.off("receive-message");
+  
+      // ✅ Explicit disconnect
+      socket.disconnect();
+      console.log("Socket disconnected on unmount");
     };
-  }, [communityId]);
+  }, [communityId, userId]);
+  
 
   const sendMessage = () => {
     if (message.trim() && currentUser) {
@@ -31,8 +41,8 @@ const MessageBox = () => {
         sender: currentUser,
       };
 
-      socket.emit('send-message', newMessage);
-      setMessage('');
+      socket.emit("send-message", newMessage);
+      setMessage("");
     }
   };
 
@@ -43,19 +53,16 @@ const MessageBox = () => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-md max-w-[75%] break-words ${
+            className={`p-2 rounded-md w-full md:max-w-[75%] break-words ${
               msg.sender === currentUser
-                ? 'bg-blue-100 self-end text-right'
-                : 'bg-gray-200 self-start text-left'
+                ? "bg-blue-100 self-end text-right"
+                : "bg-gray-200 self-start text-left"
             }`}
           >
-            <strong>
-              {msg.sender === currentUser ? 'You' : msg.sender}:
-            </strong>
+            <strong>{msg.sender === currentUser ? "You" : msg.sender}:</strong>
             {msg.message}
           </div>
         ))}
-        <div ref={bottomRef}></div>
       </div>
 
       {/* Input and send button */}
@@ -64,7 +71,7 @@ const MessageBox = () => {
           className="flex-1 border px-4 py-2 rounded"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Type your message..."
         />
         <button
