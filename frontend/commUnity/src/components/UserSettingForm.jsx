@@ -36,7 +36,7 @@ export default function UserSettingsForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-300 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-300 flex items-center justify-center p-4 animate-fall">
       <Toaster />
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">

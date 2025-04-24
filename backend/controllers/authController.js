@@ -123,7 +123,7 @@ const requestPasswordReset = async (req, res) => {
 
         // Save token and expiry (15 minutes)
         user.resetToken = token;
-        user.resetTokenExpires = Date.now() + 15 * 60 * 1000;
+        user.resetTokenExpires = Date.now() + 10 * 60 * 1000;
         await user.save();
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
@@ -134,7 +134,7 @@ const requestPasswordReset = async (req, res) => {
             subject: 'Password Reset Link',
             html: `<p>Click the link below to reset your password:</p>
                <a href="${resetLink}">${resetLink}</a>
-               <p>This link expires in 15 minutes.</p>`,
+               <p>This link expires in 10 minutes.</p>`,
         };
 
         await transporter.sendMail(mailOptions);
