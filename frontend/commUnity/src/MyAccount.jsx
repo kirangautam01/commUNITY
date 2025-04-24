@@ -3,7 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
-// import ContactForm from "./components/ContactUs";
+import { RiEditFill } from "react-icons/ri";
+import AccountEdit from "./components/UserSettingForm";
 
 function MyAccount() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -89,10 +90,12 @@ function MyAccount() {
     <div className="font-primary mt-20 w-3/4 mx-auto">
       <Toaster />
       {/* header-section */}
-      <div className="bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4 text-white">
+      <div className="relative bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4 text-white">
         <p className="float-right hover:cursor-pointer" onClick={handleLogout}>
           logout
         </p>
+        <RiEditFill className="absolute right-0 bottom-0 size-5 hover:cursor-pointer m-5" />
+
         <div className="flex flex-col md:flex-row items-center gap-5 ">
           <div className="relative rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">
             <img
@@ -130,7 +133,7 @@ function MyAccount() {
         </div>
       </div>
 
-      {/* <ContactForm /> */}
+      <AccountEdit />
     </div>
   );
 }

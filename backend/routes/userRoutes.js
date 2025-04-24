@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, userInfo, pictureChange } = require('../controllers/userController');
+const { createUser, userInfo, pictureChange, editUser } = require('../controllers/userController');
 const upload = require('../config/multerConfig')
 const { sentOtp, otpVerify, loginUser, logout } = require('../controllers/authController')
 const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember, getAllCommunities } = require('../controllers/communityController');
@@ -23,6 +23,7 @@ router.post('/register', upload.single('profilePic'), createUser); //signup
 router.post('/login', loginUser); //login
 router.patch('/changeProfile', upload.single('profilePic'), authenticateUser, pictureChange); //profile change
 router.get('/logout/', logout); //logout user
+router.put('/edit_user', editUser); //edit user
 
 //COMMUNITIES ROUTES
 router.post('/create_community', upload.single('image'), authenticateUser, createCommunity); //create community
