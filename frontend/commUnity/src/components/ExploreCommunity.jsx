@@ -192,8 +192,8 @@ function ExploreCommunity() {
           <div className="p-6 rounded-lg shadow-xl w-96 bg-white">
             <h2 className="text-lg font-semibold">Confirm Deletion</h2>
             <p className="mt-2">
-              Are you sure you want to delete this community? This action cannot
-              be undone.
+              This action will delete all events and notices of community.
+              This cannot be undone. You sure?
             </p>
             <div className="mt-4 flex justify-end gap-2">
               <button

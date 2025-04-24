@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Event = require('./eventsModel');
+const Notice = require('./noticeModel');
 
 const communitySchema = new mongoose.Schema({
     name: {
@@ -17,7 +19,7 @@ const communitySchema = new mongoose.Schema({
     },
     genre: {
         type: String,
-        enum: ['General','Entertainment', 'Business', 'Education','Sports', 'Technology', 'Others'],
+        enum: ['General', 'Entertainment', 'Business', 'Education', 'Sports', 'Technology', 'Others'],
         default: 'General'
     },
     communityId: {
@@ -43,19 +45,26 @@ const communitySchema = new mongoose.Schema({
     }],
 }, { timestamps: true });
 
-// Pre-delete middleware: Remove community reference from users who are members
+// Pre-delete middleware: Remove it from users' memberOf array, related events and notices
 communitySchema.pre("findOneAndDelete", async function (next) {
     const communityId = this.getQuery()._id;
-    
+
     try {
-        // Update all users who are members of this community, and remove the community ID from their `memberOf` array
+        // Remove community reference from users
         await mongoose.model("User").updateMany(
-            { memberOf: communityId }, // Find all users who are members of this community
-            { $pull: { memberOf: communityId } } // Pull the community ID from their `memberOf` field
+            { memberOf: communityId },
+            { $pull: { memberOf: communityId } }
         );
-        next(); // Continue with the delete operation
+
+        // Delete related events
+        await Event.deleteMany({ communityId });
+
+        // Delete related notices
+        await Notice.deleteMany({ communityId });
+
+        next();
     } catch (error) {
-        next(error); // Pass the error to next middleware if any
+        next(error);
     }
 });
 
