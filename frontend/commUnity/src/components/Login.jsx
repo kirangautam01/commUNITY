@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
-import { BiHide, BiShow } from "react-icons/bi"; 
+import { BiHide, BiShow } from "react-icons/bi";
 
 function Login() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -77,7 +77,7 @@ function Login() {
             <div className="border border-sky-400 rounded-md p-1 sm:p-2 flex items-center">
               <input
                 placeholder="Password"
-                type={showPassword ? "text" : "password"} 
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="outline-none flex-1 bg-transparent"
@@ -99,13 +99,15 @@ function Login() {
 
             <input
               type="submit"
-              className="text-white bg-sky-400 rounded-md w-fit m-auto p-1 sm:py-2 sm:px-4 cursor-pointer"
+              className="text-white bg-sky-400 rounded-md w-fit m-auto p-1 sm:py-2 sm:px-4 cursor-pointer transition-scale duration-200 ease hover:scale-105"
             />
 
             <div className="flex flex-col md:flex-row justify-between text-sm text-center sm:text-xl mt-4">
-              <p className="cursor-pointer">Forgot Password?</p>
+              <NavLink to="/pass_forgot">
+                <p className="cursor-pointer hover:underline">Forgot Password?</p>
+              </NavLink>
               <NavLink to="/signup">
-                <p className="cursor-pointer">Sign Up</p>
+                <p className="cursor-pointer hover:underline">Sign Up</p>
               </NavLink>
             </div>
           </form>

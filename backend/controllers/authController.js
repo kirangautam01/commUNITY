@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require("../models/userModel");
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const crypto = require('crypto');
 
 const sentOtp = async (req, res) => {
     try {
@@ -46,7 +47,7 @@ const sentOtp = async (req, res) => {
         console.error(error); // Log the error to the server console
         res.status(500).json({ message: "Server error" });
     }
-}; 
+};
 
 const otpVerify = async (req, res) => {
     const { otp, email } = req.body;
@@ -86,7 +87,7 @@ const loginUser = async (req, res) => {
             httpOnly: true,
             secure: true, // Use true in production (HTTPS)
             sameSite: "None",
-            maxAge: 24*60 * 60 * 1000, // 1 day
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
             path: "/",
         });
         res.json({ message: "Login successful", user });
@@ -110,4 +111,70 @@ const logout = async (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
 }
 
-module.exports = { sentOtp, otpVerify, loginUser, logout }
+const requestPasswordReset = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: 'Email not found' });
+
+        // Generate secure token
+        const token = crypto.randomBytes(32).toString('hex');
+
+        // Save token and expiry (15 minutes)
+        user.resetToken = token;
+        user.resetTokenExpires = Date.now() + 15 * 60 * 1000;
+        await user.save();
+
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+        const mailOptions = {
+            from: 'romangautam71399@gmail.com',
+            to: email,
+            subject: 'Password Reset Link',
+            html: `<p>Click the link below to reset your password:</p>
+               <a href="${resetLink}">${resetLink}</a>
+               <p>This link expires in 15 minutes.</p>`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.json({ message: 'Password reset link sent to your email.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        // 1. Find user by reset token and check if it's still valid
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpires: { $gt: Date.now() }, // Check if token is still valid
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        // 2. Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // 3. Update password and remove token fields
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpires = undefined;
+        await user.save();
+
+        // 4. Send success response
+        res.json({ message: 'Password reset successfully. You can now login.' });
+    } catch (err) {
+        console.error('Error in resetPassword:', err);
+        res.status(500).json({ message: 'Server error while resetting password' });
+    }
+};
+
+module.exports = { sentOtp, otpVerify, loginUser, logout, requestPasswordReset, resetPassword }

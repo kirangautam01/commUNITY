@@ -17,6 +17,8 @@ import Footer from "./components/Footer.jsx";
 import Chatbox from "./components/Chatbox.jsx";
 import LoadFromTop from "./components/LoadFromTop.jsx";
 import CommunityGuides from "./components/CommunityGuides.jsx";
+import ForgotPassword from "./components/ForgotPassword.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,11 @@ const router = createBrowserRouter([
     path: "/guides",
     element: <CommunityGuides />,
   },
+  {
+    path: "/pass_forgot",
+    element: <ForgotPassword />,
+  },
+  { path: "/reset-password", element: <ResetPassword /> },
   {
     path: "/",
     element: (

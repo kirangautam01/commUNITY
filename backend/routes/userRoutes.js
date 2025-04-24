@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { createUser, userInfo, pictureChange, editUser } = require('../controllers/userController');
 const upload = require('../config/multerConfig')
-const { sentOtp, otpVerify, loginUser, logout } = require('../controllers/authController')
+const { sentOtp, otpVerify, loginUser, logout, requestPasswordReset, resetPassword } = require('../controllers/authController')
 const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember, getAllCommunities } = require('../controllers/communityController');
 const authenticateUser = require('../middleware/myMiddleware');
 const notice = require('../controllers/noticeController');
@@ -17,6 +17,8 @@ const { getCommentsByEventId, createComment, deleteComment } = require('../contr
 //AUTH ROUTES
 router.post('/otp_sent', sentOtp);  //send otp
 router.post('/otp_verify', otpVerify); //verify otp
+router.post('/req_pass_reset', requestPasswordReset); //request password reset
+router.post('/reset_pass', resetPassword); //reset password
 
 //USERS ROUTES
 router.post('/register', upload.single('profilePic'), createUser); //signup
