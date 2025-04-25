@@ -25,7 +25,6 @@ router.post('/register', upload.single('profilePic'), createUser); //signup
 router.post('/login', loginUser); //login
 router.patch('/changeProfile', upload.single('profilePic'), authenticateUser, pictureChange); //profile change
 router.get('/logout', logout); //logout user
-// router.put('/edit_user', editUser); //edit user
 router.get('/fetch_user', authenticateUser, fetchUser); //fetch user by id
 router.patch('/update_username', authenticateUser, updateUsername); //update username by user id
 router.patch('/update_password', authenticateUser, updatePassword); //update password by user id
