@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Event = require('./eventsModel');
 const Notice = require('./noticeModel');
+const Comment = require('./commentModel');
 
 const communitySchema = new mongoose.Schema({
     name: {
@@ -61,6 +62,9 @@ communitySchema.pre("findOneAndDelete", async function (next) {
 
         // Delete related notices
         await Notice.deleteMany({ communityId });
+
+        //Delete related comments
+        await Comment.deleteMany({ communityId });
 
         next();
     } catch (error) {

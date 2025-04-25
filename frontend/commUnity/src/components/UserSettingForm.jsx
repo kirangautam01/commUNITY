@@ -36,10 +36,10 @@ export default function UserSettingsForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-300 flex items-center justify-center p-4 animate-fall">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-300 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 animate-fall">
       <Toaster />
-      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+      <div className="bg-white shadow-2xl rounded-2xl p-6 sm:p-8 w-full max-w-md sm:max-w-lg lg:max-w-xl">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 text-center">
           Update Profile Settings
         </h2>
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -56,14 +56,14 @@ export default function UserSettingsForm() {
               name="username"
               onChange={handleChange}
               placeholder="Enter new username"
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full px-4 py-2 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
           </div>
 
-          {/* Password Field */}
+          {/* Old Password Field */}
           <div>
             <label
-              htmlFor="password"
+              htmlFor="oldPassword"
               className="block text-gray-700 font-medium mb-2"
             >
               Old Password
@@ -73,13 +73,14 @@ export default function UserSettingsForm() {
               name="oldPassword"
               onChange={handleChange}
               placeholder="Enter old password"
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full px-4 py-2 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
           </div>
 
+          {/* New Password Field */}
           <div>
             <label
-              htmlFor="password"
+              htmlFor="newPassword"
               className="block text-gray-700 font-medium mb-2"
             >
               New Password
@@ -89,7 +90,7 @@ export default function UserSettingsForm() {
               name="newPassword"
               onChange={handleChange}
               placeholder="Enter new password"
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full px-4 py-2 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
           </div>
 
@@ -106,7 +107,7 @@ export default function UserSettingsForm() {
               name="location"
               onChange={handleChange}
               placeholder="Enter your location"
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              className="w-full px-4 py-2 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
             />
           </div>
 
@@ -114,7 +115,7 @@ export default function UserSettingsForm() {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition duration-300"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 rounded-xl font-semibold transition duration-300"
             >
               Save Changes
             </button>

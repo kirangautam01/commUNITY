@@ -86,14 +86,20 @@ const DisplayEventsTimeline = () => {
   const deleteEvent = async (eventId) => {
     try {
       const response = await axios.delete(
-        `${backendUrl}/users/delete_event/${eventId}`
+        `${backendUrl}/users/delete_event/${eventId}`,
+        {
+          withCredentials: true,
+        }
       );
 
-      if (response.data.success) {
+      if (response.status === 200) {
         toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log("event delete error: ", error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -230,7 +236,7 @@ const DisplayEventsTimeline = () => {
 
             {visibleComments[event._id] && (
               <div>
-                <Comments eventId={event._id} />
+                <Comments eventId={event._id} commId={event.communityId} />
               </div>
             )}
           </div>

@@ -94,9 +94,6 @@ function MyAccount() {
         <p className="float-right hover:cursor-pointer" onClick={handleLogout}>
           logout
         </p>
-        <RiEditFill
-          className="absolute right-0 bottom-0 size-5 hover:cursor-pointer m-5"
-        />
 
         <div className="flex flex-col md:flex-row items-center gap-5 ">
           <div className="relative rounded-full w-30 md:w-40 h-30 md:h-40 shadow-2xl shadow-black/80">

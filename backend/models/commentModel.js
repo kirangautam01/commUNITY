@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Community = require('./communityModel');
 
 const commentSchema = new mongoose.Schema({
     eventId: {
@@ -15,6 +16,11 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    communityId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'communities',
+        required: true
     }
 });
 

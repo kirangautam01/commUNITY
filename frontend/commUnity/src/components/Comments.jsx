@@ -3,7 +3,7 @@ import axios from "axios";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
 
-function Comments({ eventId }) {
+function Comments({ eventId, commId }) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const userId = localStorage.getItem("userId");
   const [newComment, setNewComment] = useState("");
@@ -14,18 +14,17 @@ function Comments({ eventId }) {
   const [commentIdToDelete, setCommentIdToDelete] = useState(null);
 
   // -------------------------------------------------------------------------------- PREVENT SCROLLING BEHIND
-    useEffect(() => {
-      if (showConfirmModal) {
-        document.body.classList.add("overflow-hidden");
-      } else {
-        document.body.classList.remove("overflow-hidden");
-      }
-  
-      // Clean up on unmount
-      return () => {
-        document.body.classList.remove("overflow-hidden");
-      };
-    }, [showConfirmModal]);
+  useEffect(() => {
+    if (showConfirmModal) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up on unmount
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [showConfirmModal]);
 
   // ------------------------------------------------------- TO DISAPPEAR DELETE MENU IN COMMENT SECTION WHEN CLICKING OUTSIDE
   useEffect(() => {
@@ -68,6 +67,7 @@ function Comments({ eventId }) {
         eventId,
         userId,
         commentText: newComment,
+        communityId: commId._id, 
       });
 
       setNewComment("");
@@ -80,7 +80,10 @@ function Comments({ eventId }) {
   const deleteComment = async (commentId) => {
     try {
       const response = await axios.delete(
-        `${backendUrl}/users/delete_comment/${commentId}`
+        `${backendUrl}/users/delete_comment/${commentId}`,
+        {
+          withCredentials: true,
+        }
       );
 
       if (response.status === 200) {
@@ -93,7 +96,10 @@ function Comments({ eventId }) {
       }
     } catch (error) {
       console.log("error deleting comment: ", error);
-      toast.error("Something went wrong while deleting the comment.");
+      toast.error(
+        error.response.data.message ||
+          "Something went wrong while deleting the comment."
+      );
     }
   };
 

@@ -105,11 +105,33 @@ const toggleLikeDislike = async (req, res) => {
 const deleteEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
+    const userId = req.user._id;
+
+    // 1. Find the event first
+    const event = await EventModel.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ success: false, message: 'Event not found' });
+    }
+
+    // 2. Check if the user is the event author
+    const isAuthor = event.author.toString() === userId.toString();
+
+    // 3. Fetch the community and check if the user is the community creator
+    const community = await Community.findById(event.communityId);
+    const isCommunityCreator = community?.creater?.toString() === userId.toString();
+
+    // 4. Authorize: only allow deletion if either condition is true
+    if (!isAuthor && !isCommunityCreator) {
+      return res.status(403).json({ success: false, message: 'Unauthorized to delete this event' });
+    }
+
+    // 5. Delete the event
     await EventModel.findByIdAndDelete(eventId);
-    res.status(200).json({ success: true, message: 'Event deleted successfully' });
+
+    return res.status(200).json({ success: true, message: 'Event deleted successfully' });
   } catch (error) {
     console.error('Error deleting event:', error);
-    res.status(500).json({ success: false, message: 'Failed to delete event' });
+    return res.status(500).json({ success: false, message: 'Failed to delete event' });
   }
 };
 
