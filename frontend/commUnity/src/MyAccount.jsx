@@ -3,8 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
-import { RiEditFill } from "react-icons/ri";
-import AccountEdit from "./components/UserSettingForm";
+// import AccountEdit from "./components/UserSettingForm";
+import Setting from "./Setting";
 
 function MyAccount() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -132,7 +132,8 @@ function MyAccount() {
         </div>
       </div>
 
-      <AccountEdit />
+      {/* <AccountEdit /> */}
+      <Setting />
     </div>
   );
 }

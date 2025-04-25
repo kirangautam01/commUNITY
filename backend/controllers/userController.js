@@ -82,44 +82,92 @@ const pictureChange = async (req, res) => {
 };
 
 // ------------------------------------------------------------------------------------------------------- EDIT USER
-const editUser = async (req, res) => {
+// const editUser = async (req, res) => {
+//     try {
+//         const { userId, oldPassword, newPassword, username, location } = req.body;
+
+//         // 1. Find the user
+//         const check_user = await User.findById(userId);
+//         if (!check_user) {
+//             return res.status(404).json({ message: "Cannot find user" });
+//         }
+
+//         // 2. Check old password
+//         const isMatch = await bcrypt.compare(oldPassword, check_user.password);
+//         if (!isMatch) {
+//             return res.status(401).json({ message: "Old password didn't match" });
+//         }
+
+//         // 3. Update fields if provided
+//         if (newPassword) {
+//             check_user.password = await bcrypt.hash(newPassword, 10); // hash new password
+//         }
+//         if (username) {
+//             check_user.username = username;
+//         }
+//         if (location) {
+//             check_user.location = location;
+//         }
+
+//         // 4. Save updates
+//         await check_user.save();
+
+//         res.status(200).json({ message: "User updated successfully" });
+
+//     } catch (error) {
+//         console.log("Edit user error", error);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// };
+
+// ------------------------------------------------------------------------------------------------------- FETCH USER BY ID
+const fetchUser = async (req, res) => {
+    const userId = req.user?._id;
+
     try {
-        const { userId, oldPassword, newPassword, username, location } = req.body;
-
-        // 1. Find the user
-        const check_user = await User.findById(userId);
-        if (!check_user) {
-            return res.status(404).json({ message: "Cannot find user" });
+        if (!userId) {
+            return res.status(404).json({ message: "No userId received." });
         }
-
-        // 2. Check old password
-        const isMatch = await bcrypt.compare(oldPassword, check_user.password);
-        if (!isMatch) {
-            return res.status(401).json({ message: "Old password didn't match" });
-        }
-
-        // 3. Update fields if provided
-        if (newPassword) {
-            check_user.password = await bcrypt.hash(newPassword, 10); // hash new password
-        }
-        if (username) {
-            check_user.username = username;
-        }
-        if (location) {
-            check_user.location = location;
-        }
-
-        // 4. Save updates
-        await check_user.save();
-
-        res.status(200).json({ message: "User updated successfully" });
-
+        const user = await User.findById(userId);
+        res.status(200).json({ user: user, message: "user fetched successfully." });
     } catch (error) {
-        console.log("Edit user error", error);
+        console.log("user fetching error: ", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------- UPDATE USERNAME ONLY
+const updateUsername = async (req, res) => {
+    const userId = req.user?._id;
+    const { newUsername } = req.body;
+
+    if (!userId || userId == 'undefined') {
+        return res.status(400).json({ message: "user is not defined" });
+    }
+    if (!newUsername || newUsername.trim() === "") {
+        return res.status(400).json({ message: "Username cannot be empty" });
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { username: newUsername.trim() },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Username updated successfully",
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error("Error updating username:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
 
 
-
-module.exports = { createUser, userInfo, pictureChange, editUser };
+module.exports = { createUser, userInfo, pictureChange, fetchUser,updateUsername };

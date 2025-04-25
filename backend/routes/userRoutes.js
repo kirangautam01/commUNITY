@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, userInfo, pictureChange, editUser } = require('../controllers/userController');
+const { createUser, userInfo, pictureChange, fetchUser, updateUsername } = require('../controllers/userController');
 const upload = require('../config/multerConfig')
 const { sentOtp, otpVerify, loginUser, logout, requestPasswordReset, resetPassword } = require('../controllers/authController')
 const { createCommunity, joinCommunity, getCommunitiesByCreater, getCommunitiesByMember, exploreCommunity, top10Communities, leaveCommunity, searchCommunity, filterCommunity, delCommunity, editCommunity, isUserMember, getAllCommunities } = require('../controllers/communityController');
@@ -24,8 +24,10 @@ router.post('/reset_pass', resetPassword); //reset password
 router.post('/register', upload.single('profilePic'), createUser); //signup
 router.post('/login', loginUser); //login
 router.patch('/changeProfile', upload.single('profilePic'), authenticateUser, pictureChange); //profile change
-router.get('/logout/', logout); //logout user
-router.put('/edit_user', editUser); //edit user
+router.get('/logout', logout); //logout user
+// router.put('/edit_user', editUser); //edit user
+router.get('/fetch_user', authenticateUser, fetchUser); //fetch user by id
+router.patch('/update_username', authenticateUser, updateUsername); //update username by user id
 
 //COMMUNITIES ROUTES
 router.post('/create_community', upload.single('image'), authenticateUser, createCommunity); //create community
