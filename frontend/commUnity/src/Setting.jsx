@@ -12,7 +12,18 @@ function Setting() {
   const [usernameChange, setUsernameChange] = useState(false);
   const [newUname, setNewUname] = useState("");
   const [passwordChange, setPasswordChange] = useState(false);
-  const [newPW, setNewPW] = useState("");
+  const [oldPW, setOldPW] = useState("");
+  const [newPW1, setNewPW1] = useState("");
+  const [newPW2, setNewPW2] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (newPW1 && newPW2 && newPW1 !== newPW2) {
+      setError("New passwords do not match");
+    } else {
+      setError("");
+    }
+  }, [newPW1, newPW2]);
 
   // --------------------------------------------------------------- FETCH USER
   useEffect(() => {
@@ -39,7 +50,7 @@ function Setting() {
   const handleUsernameUpdate = async () => {
     try {
       const response = await axios.patch(
-        `${backendUrl}/users/update_Username`,
+        `${backendUrl}/users/update_username`,
         {
           newUsername: newUname,
         },
@@ -58,8 +69,28 @@ function Setting() {
   };
 
   // --------------------------------------------------------------- UPDATE PASSWORD
-  const handlePasswordUpdate = () => {
-    console.log("new password: ", newPW);
+  const handlePasswordUpdate = async () => {
+    // console.log("old pass: ", oldPW);
+    // console.log("new pass 1: ", newPW1);
+    // console.log("new pass 2: ", newPW2);
+    try {
+      const response = await axios.patch(
+        `${backendUrl}/users/update_password`,
+        {
+          oldPassword: oldPW,
+          newPassword: newPW2,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast.success(response.data.message);
+      setPasswordChange(false); // optionally close the modal
+    } catch (error) {
+      console.log("error updating password: ", error);
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -137,19 +168,39 @@ function Setting() {
           <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-[rgba(0,0,0,0.5)]">
             <div className="bg-white p-6 rounded-2xl shadow-lg w-96 space-y-4">
               <h2 className="text-xl font-semibold text-gray-800">
-                Update Username
+                Update Password
               </h2>
 
               <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-600">
+                  old Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryBlue"
+                  onChange={(e) => setOldPW(e.target.value)}
+                />
                 <label className="block text-sm font-medium text-gray-600">
                   New Password
                 </label>
                 <input
                   type="password"
                   placeholder="Enter new password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                  onChange={(e) => setNewPW(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryBlue"
+                  onChange={(e) => setNewPW1(e.target.value)}
                 />
+                <label className="block text-sm font-medium text-gray-600">
+                  New Password Again
+                </label>
+                <input
+                  type="password"
+                  placeholder="Enter new password"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryBlue"
+                  onChange={(e) => setNewPW2(e.target.value)}
+                />
+
+                {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
               </div>
 
               <div className="flex justify-end gap-2 pt-4">
@@ -160,8 +211,13 @@ function Setting() {
                   Cancel
                 </button>
                 <button
-                  className="px-4 py-2 rounded-lg text-sm bg-primaryBlue hover:bg-blue-700 text-white"
+                  className={`px-4 py-2 rounded-lg text-sm text-white ${
+                    error || !oldPW || !newPW1 || !newPW2
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-primaryBlue hover:bg-blue-700"
+                  }`}
                   onClick={handlePasswordUpdate}
+                  disabled={!!error || !oldPW || !newPW1 || !newPW2}
                 >
                   Update
                 </button>

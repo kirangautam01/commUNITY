@@ -139,7 +139,7 @@ const fetchUser = async (req, res) => {
 // ------------------------------------------------------------------------------------------------------- UPDATE USERNAME ONLY
 const updateUsername = async (req, res) => {
     const userId = req.user?._id;
-    const { newUsername } = req.body;
+    const { oldPassword, newUsername } = req.body;
 
     if (!userId || userId == 'undefined') {
         return res.status(400).json({ message: "user is not defined" });
@@ -169,5 +169,50 @@ const updateUsername = async (req, res) => {
     }
 };
 
+// ------------------------------------------------------------------------------------------------------- UPDATE PASSWORD ONLY
+const updatePassword = async (req, res) => {
+    const userId = req.user?._id;
+    const userPassword = req.user?.password;
+    const { oldPassword, newPassword } = req.body;
 
-module.exports = { createUser, userInfo, pictureChange, fetchUser,updateUsername };
+    if (!userId || userId == 'undefined') {
+        return res.status(400).json({ message: "User is not defined" });
+    }
+
+    if (!newPassword || newPassword.trim() === "") {
+        return res.status(400).json({ message: "Password cannot be empty" });
+    }
+
+    // 1. Check old password
+    const isMatch = await bcrypt.compare(oldPassword, userPassword);
+    if (!isMatch) {
+        return res.status(401).json({ message: "Old password didn't match" });
+    }
+
+    try {
+        // ✅ Hash the new password before saving
+        const hashedPassword = await bcrypt.hash(newPassword.trim(), 10);
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { password: hashedPassword },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Password updated successfully",
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+
+module.exports = { createUser, userInfo, pictureChange, fetchUser, updateUsername, updatePassword };
