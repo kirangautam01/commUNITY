@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const Community = require('../models/communityModel');
+const mongoose = require('mongoose');
 
 const createUser = async (req, res) => {
     try {
@@ -175,6 +177,62 @@ const updatePassword = async (req, res) => {
     }
 };
 
+// ------------------------------------------------------------------------------------------------------- DELETE USER 
+const deleteUser = async (req, res) => {
+    try {
+        const user = req.user;
+        const { uName } = req.body;
+
+        if (user.username !== uName.trim()) {
+            return res.status(404).json({ message: "Name doesn't match" });
+        }
+
+        // console.log("old creater:", user._id);
+
+        const communities = await Community.find({ creater: user._id }); // use creater
+
+        for (const community of communities) {
+            // console.log("Community ID:", community._id, "Members:", community.members);
+
+            if (community.members && community.members.length > 0) {
+                const newCreaterId = community.members.find(
+                    (memberId) => memberId.toString() !== user._id.toString()
+                );
+
+                if (newCreaterId) {
+                    // Remove new creater from members list
+                    // community.members = community.members.filter(
+                    //     (memberId) => memberId.toString() !== newCreaterId.toString()
+                    // );
+
+                    community.creater = new mongoose.Types.ObjectId(newCreaterId); // again creater
+                    // console.log("New creater assigned:", newCreaterId);
+
+                    await community.save();
+                } else {
+                    console.log("No eligible members, setting creater to null");
+                    community.creater = null;
+                    await community.save();
+                }
+            } else {
+                console.log("No members left, setting creater to null");
+                community.creater = null;
+                await community.save();
+            }
+        }
+
+        // 3. Delete the user
+        await User.findByIdAndDelete(user._id);
+
+        res.status(200).json({ message: "User deleted successfully" });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 
-module.exports = { createUser, userInfo, pictureChange, fetchUser, updateUsername, updatePassword };
+
+
+module.exports = { createUser, userInfo, pictureChange, fetchUser, updateUsername, updatePassword, deleteUser };

@@ -3,9 +3,6 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
 function Setting() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [user, setUser] = useState([]);
@@ -16,6 +13,8 @@ function Setting() {
   const [newPW1, setNewPW1] = useState("");
   const [newPW2, setNewPW2] = useState("");
   const [error, setError] = useState("");
+  const [deleteModal, setDeleteModal] = useState("");
+  const [deleteInputValue, setDeleteInputValue] = useState("");
 
   useEffect(() => {
     if (newPW1 && newPW2 && newPW1 !== newPW2) {
@@ -90,6 +89,23 @@ function Setting() {
     } catch (error) {
       console.log("error updating password: ", error);
       toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  // --------------------------------------------------------------- DELETE USER
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`${backendUrl}/users/delete_user`, {
+        data: { uName: deleteInputValue },
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log("error while deleting: ", error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -228,7 +244,7 @@ function Setting() {
       </div>
 
       {/* ******************************************************************************** preferences BOX */}
-      <div className="bg-gray-100 p-4 rounded-xl shadow-sm space-y-4">
+      {/* <div className="bg-gray-100 p-4 rounded-xl shadow-sm space-y-4">
         <h3 className="text-lg font-semibold">Preferences</h3>
         <div className="flex items-center justify-between">
           <span>Dark Mode</span>
@@ -238,7 +254,7 @@ function Setting() {
           <span>Email Notifications</span>
           <input type="checkbox" className="w-5 h-5" />
         </div>
-      </div>
+      </div> */}
 
       {/* ******************************************************************************** DELETE ACCOUNT BOX */}
       <div className="bg-red-50 border border-red-300 p-4 rounded-xl shadow-sm">
@@ -248,23 +264,30 @@ function Setting() {
         </p>
         <button
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
-          onClick={() => setShowConfirm(true)}
+          onClick={() => setDeleteModal(true)}
         >
           Delete Account
         </button>
 
         {/* ******************************************************************************** DELETE CONFIRMATION BOX */}
-        {showConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-xl shadow-md w-80">
-              <h4 className="text-lg font-semibold mb-2">Are you sure?</h4>
+        {deleteModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-[rgba(0,0,0,0.5)]">
+            <div className="bg-white p-6 rounded-xl shadow-md w-100">
+              <h4 className="text-lg font-semibold mb-2">
+                Enter your username to confirm:
+              </h4>
+              <input
+                className="border rounded-2xl w-80 px-4"
+                onChange={(e) => setDeleteInputValue(e.target.value)}
+              />
               <p className="text-sm text-gray-600">
-                This action cannot be undone.
+                This action cannot be undone. The ownership of communities
+                you've created will goes to another random members.
               </p>
               <div className="mt-4 flex justify-end gap-2">
                 <button
                   className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
-                  onClick={() => setShowConfirm(false)}
+                  onClick={() => setDeleteModal(false)}
                 >
                   Cancel
                 </button>
