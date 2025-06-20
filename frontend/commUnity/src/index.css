@@ -9,8 +9,6 @@
   --color-primaryBlue: oklch(0.746 0.16 232.661);
   --color-primaryRed: oklch(0.712 0.194 13.428);
   --color-primaryGreen: oklch(0.871 0.15 154.449);
-
-  --font-primary: "Quicksand", sans-serif;
 }
 
 @keyframes fall {

@@ -5,12 +5,14 @@ import { FaCamera } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
 // import AccountEdit from "./components/UserSettingForm";
 import Setting from "./Setting";
+import { FaBeer } from "react-icons/fa";
 
 function MyAccount() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [data, setData] = useState();
   const fileInputRef = useRef(null); // to trigger hidden input
   const navigate = useNavigate();
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,6 +92,40 @@ function MyAccount() {
     <div className="font-primary mt-20 w-3/4 mx-auto">
       <Toaster />
       {/* header-section */}
+
+      {/* DUSI CODE  */}
+      {/* <div>
+      <button
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        className="flex items-center gap-2 px-5 py-2 text-lg cursor-pointer bg-green-500 text-white border-none rounded-md perspective-1000"
+      >
+        <span
+          className={`inline-block transition-transform duration-700 ${
+            hover ? 'flip-and-move' : 'rotate-x-0'
+          }`}
+        >
+          hello
+        </span>
+        <FaBeer size={20} />
+      </button>
+
+      
+      <style>
+        {`
+          .perspective-1000 {
+            perspective: 1000px;
+          }
+          .rotate-x-0 {
+            transform: rotateX(0deg) translateY(0);
+          }
+          .flip-and-move {
+            transform: rotateX(360deg) translateY(8px);
+          }
+        `}
+      </style>
+    </div> */}
+
       <div className="relative bg-gradient-to-br from-primaryRed to-black rounded-t-2xl p-4 text-white">
         <p className="float-right hover:cursor-pointer" onClick={handleLogout}>
           logout
