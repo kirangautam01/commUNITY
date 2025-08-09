@@ -44,7 +44,7 @@ const sentOtp = async (req, res) => {
         // Send response to frontend
         return res.status(200).json({ exists: false, otpSent: true, message: "OTP sent to email" });
     } catch (error) {
-        console.error(error); // Log the error to the server console
+        console.log(error); // Log the error to the server console
         res.status(500).json({ message: "Server error" });
     }
 };
